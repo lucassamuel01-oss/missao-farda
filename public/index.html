@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Feminina — Missão Farda</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="crest">✦</span>
+      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
+    </a>
+    <nav>
+      <a href="#plano">Gerar plano</a>
+      <a href="#pomodoro">Pomodoro</a>
+      <a href="#dicas">Dicas do edital</a>
+      <a href="/curso" class="nav-highlight">Curso completo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <p class="eyebrow">Seu plano. Sua rotina. Sua aprovação.</p>
+        <h1>O plano certo para sua <span>Missão</span></h1>
+        <p class="hero-copy">Gere um cronograma personalizado por assunto, com distribuição inteligente de assuntos, técnica Pomodoro e foco nas suas dificuldades, conforme o edital escolhido, os dias até a prova e seu tempo real de estudo.</p>
+        <div class="hero-actions">
+          <a href="#plano" class="submit-btn hero-btn">Gerar plano gratuito</a>
+          <a href="/curso" class="ghost-btn">Ver curso completo</a>
+        </div>
+        <div class="benefits">
+          <div><b>🎯 Distribuição estratégica</b><small>Mais foco no que você tem dificuldade</small></div>
+          <div><b>⏱️ Pomodoro tático</b><small>25min foco + 5min pausa</small></div>
+          <div><b>📅 Por edital e assunto</b><small>SD PMBA ou CFO PMBA</small></div>
+        </div>
+      </div>
+
+      <div class="hero-photo" aria-label="Imagem temática policial feminina"></div>
+
+      <section id="plano" class="planner-card glass">
+        <div class="form-title">
+          <span>☆</span>
+          <div>
+            <h2>Vamos criar seu plano de estudos</h2>
+            <p>Preencha os dados para iniciar a missão.</p>
+          </div>
+        </div>
+
+        <form action="/gerar-plano" method="POST" id="studyForm">
+          <label class="full">Qual concurso você irá fazer?
+            <select name="concurso" id="concurso" required>
+              <option value="">Selecione o concurso</option>
+              <option value="SD PMBA">SD PMBA</option>
+              <option value="CFO PMBA">CFO PMBA</option>
+            </select>
+          </label>
+
+          <div class="switch-row" aria-label="Escolha rápida">
+            <button type="button" data-concurso="SD PMBA">SD PMBA</button>
+            <button type="button" data-concurso="CFO PMBA">CFO PMBA</button>
+          </div>
+
+          <label>Nome
+            <input name="nome" placeholder="Digite seu nome completo" required />
+          </label>
+
+          <label>E-mail
+            <input type="email" name="email" placeholder="seu@email.com" required />
+          </label>
+
+          <label>WhatsApp
+            <input type="tel" name="whatsapp" id="whatsapp" placeholder="(71) 99999-9999" required />
+          </label>
+
+          <label>Data da prova
+            <input type="date" name="dataProva" id="dataProva" required />
+          </label>
+
+          <label>Horas por dia disponíveis
+            <input type="number" min="1" max="12" name="horasDia" id="horasDia" placeholder="Ex.: 3" required />
+          </label>
+
+          <label>Dias por semana disponíveis
+            <input type="number" min="1" max="7" name="diasSemana" id="diasSemana" placeholder="Ex.: 5" required />
+          </label>
+
+          <label>Trabalha?
+            <select name="trabalha" required>
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </label>
+
+          <label>Nível atual
+            <select name="nivel" required>
+              <option value="">Selecione</option>
+              <option value="iniciante">Iniciante</option>
+              <option value="intermediário">Intermediário</option>
+              <option value="avançado">Avançado</option>
+            </select>
+          </label>
+
+          <fieldset class="full check-section">
+            <legend>Matérias com mais dificuldade</legend>
+            <p>Marque uma ou mais matérias que precisam de prioridade no cronograma.</p>
+            <div id="dificuldadesBox" class="checkbox-grid"></div>
+          </fieldset>
+
+          <fieldset class="full check-section">
+            <legend>Matérias com mais facilidade</legend>
+            <p>Marque matérias que você domina melhor para equilibrar o plano.</p>
+            <div id="facilidadesBox" class="checkbox-grid"></div>
+          </fieldset>
+
+          <label>Já estudou para a PMBA antes?
+            <select name="estudouAntes" required>
+              <option value="">Selecione</option>
+              <option>Sim</option>
+              <option>Não</option>
+            </select>
+          </label>
+
+          <label>Nota alvo
+            <input type="number" name="notaAlvo" placeholder="Ex.: 70" />
+          </label>
+
+          <label class="full">Observações
+            <textarea name="observacoes" placeholder="Conte algo importante sobre sua rotina, dificuldades, trabalho, filhos ou objetivo..."></textarea>
+          </label>
+
+          <div class="mission-preview full">
+            <div><span id="daysLeft">--</span><small>dias até a prova</small></div>
+            <div><span id="weeklyLoad">--</span><small>horas por semana</small></div>
+            <div><span id="mode">Missão</span><small>intensidade</small></div>
+          </div>
+
+          <div class="pomodoro-preview full"><strong>Estratégia do plano:</strong> <span id="dailyModel">Informe seus dados para ver a estratégia de estudo.</span></div>
+
+          <button class="submit-btn full" type="submit">🚀 Gerar meu plano Pomodoro</button>
+        </form>
+      </section>
+    </section>
+
+    <section id="pomodoro" class="method-section">
+      <div class="section-title">
+        <p class="eyebrow">Método de execução</p>
+        <h2>Pomodoro tático aplicado ao edital</h2>
+        <p>O cronograma usa ciclos curtos para manter foco, alternar disciplinas e aumentar retenção.</p>
+      </div>
+      <div class="method-grid">
+        <article class="glass method-card"><strong>25min</strong><span>Foco total em teoria, questões ou revisão</span></article>
+        <article class="glass method-card"><strong>5min</strong><span>Pausa curta para recuperar atenção</span></article>
+        <article class="glass method-card"><strong>4 ciclos</strong><span>Depois disso, pausa longa de 15min</span></article>
+        <article class="glass method-card"><strong>Rodízio</strong><span>O sistema evita repetir a mesma matéria em sequência</span></article>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="how glass">
+      <h2>Como funciona</h2>
+      <div class="steps">
+        <article><span>1</span><b>Você responde</b><p>Rotina, edital, prazo e dificuldades.</p></article>
+        <article><span>2</span><b>Analisamos</b><p>O sistema cruza tempo, peso e assuntos.</p></article>
+        <article><span>3</span><b>Criamos o plano</b><p>Cronograma Pomodoro por assunto.</p></article>
+        <article><span>4</span><b>Você executa</b><p>Com foco, revisão e questões.</p></article>
+      </div>
+    </section>
+
+    <section id="dicas" class="tips-section">
+      <div class="section-title">
+        <p class="eyebrow">Estratégia real de edital</p>
+        <h2>Dicas que podem evitar estudo errado</h2>
+      </div>
+
+      <div class="tips-grid">
+        <article class="glass tip-card"><span>CFO</span><h3>Português + Direito + Humanas são o eixo da prova</h3><p>No CFO PMBA, essas três áreas concentram a maior parte das questões. O plano prioriza essas matérias, mas sem abandonar as menores.</p></article>
+        <article class="glass tip-card"><span>CFO</span><h3>Não zere nenhuma disciplina</h3><p>O plano mantém rodízio semanal porque deixar Inglês ou Informática de lado pode ser perigoso, mesmo com menor peso.</p></article>
+        <article class="glass tip-card"><span>CFO</span><h3>Redação precisa de treino semanal</h3><p>Treine estrutura, clareza, coesão e concisão. A redação não deve aparecer só na última semana.</p></article>
+        <article class="glass tip-card"><span>SD</span><h3>50 questões gerais + 30 específicas</h3><p>O estudo precisa equilibrar base geral com o bloco jurídico específico. O sistema distribui os dois blocos.</p></article>
+        <article class="glass tip-card"><span>SD</span><h3>Questões desde o início</h3><p>Questões revelam padrões de erro e ajudam a estudar com mais precisão. Por isso entram nos primeiros ciclos.</p></article>
+        <article class="glass tip-card"><span>TAF</span><h3>A aprovação não termina na objetiva</h3><p>As fases posteriores exigem preparo físico, mental, médico, documental e investigação social. Organize-se cedo.</p></article>
+      </div>
+
+      <div class="cta-strip glass">
+        <div>
+          <h3>Quer uma preparação completa guiada?</h3>
+          <p>Use o gerador gratuito e avance para o curso completo com aulas, questões, revisão, redação e estratégia.</p>
+        </div>
+        <a href="/curso" class="submit-btn mini-cta">Comprar curso completo</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>ELITE FEMININA — MISSÃO FARDA</strong>
+    <span>A farda é pesada, mas a honra é maior ainda.</span>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
