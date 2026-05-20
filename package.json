@@ -1,14 +1,32 @@
 {
-  "name": "elite-feminina-missao-farda-v4",
-  "version": "4.0.0",
+  "name": "elite-feminina-missao-farda",
+  "version": "4.2.0",
   "description": "Site para geração de cronograma PMBA com Pomodoro, alternância de matérias e informações do edital",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "nodemon server.js",
+    "lint": "node --check server.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "pmba",
+    "concurso",
+    "pomodoro",
+    "cronograma",
+    "estudos",
+    "educacao"
+  ],
+  "author": "Elite Feminina",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.5",
     "express": "^4.22.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
