@@ -73,3 +73,41 @@ whatsapp.addEventListener("input", e => e.target.value = mascaraWhatsApp(e.targe
 
 preencherMaterias();
 atualizarPreview();
+
+document
+  .getElementById('leadForm')
+  .addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    const formData = {
+      nome: e.target.nome.value,
+      email: e.target.email.value,
+      telefone: e.target.telefone.value
+    };
+
+    try {
+
+      const response = await fetch('/salvar-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      alert(data.message);
+
+      e.target.reset();
+
+    } catch (error) {
+
+      alert('Erro ao enviar formulário');
+
+      console.error(error);
+
+    }
+
+  });

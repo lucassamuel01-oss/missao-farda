@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -10,6 +9,35 @@ const COURSE_URL = process.env.COURSE_URL || "https://web.concurseiroelitelp.com
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.json());
+
+app.post('/salvar-lead', (req, res) => {
+
+  const novoLead = req.body;
+
+  let leads = [];
+
+  if (fs.existsSync('leads.json')) {
+
+    leads = JSON.parse(
+      fs.readFileSync('leads.json')
+    );
+
+  }
+
+  leads.push(novoLead);
+
+  fs.writeFileSync(
+    'leads.json',
+    JSON.stringify(leads, null, 2)
+  );
+
+  res.json({
+    success: true,
+    message: 'Dados enviados com sucesso!'
+  });
+
+});
 
 const EDITAIS = {
   "SD PMBA": {
