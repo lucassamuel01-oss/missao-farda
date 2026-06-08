@@ -1171,538 +1171,406 @@ function renderCursoPage() {
   <title>Preparatório PMBA — Manual do Mike · Elite Feminina</title>
   <link rel="stylesheet" href="/styles.css" />
   <style>
-    .mike-page { padding: 0 0 60px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .mike { font-family: 'Segoe UI', sans-serif; color: var(--text); }
 
-    /* ── Hero ──────────────────── */
-    .mike-hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 560px;
-      display: flex;
-      align-items: center;
-      padding: 60px 40px;
+    /* Hero */
+    .mk-hero {
+      position: relative; overflow: hidden; min-height: 620px;
+      display: flex; align-items: center; padding: 80px 48px;
       background:
-        linear-gradient(100deg, rgba(5,7,6,.97) 0%, rgba(5,7,6,.82) 55%, rgba(5,7,6,.44) 100%),
-        url('/assets/hero-1.jpeg') center right / cover;
+        linear-gradient(110deg, rgba(4,6,5,.98) 0%, rgba(4,6,5,.85) 50%, rgba(4,6,5,.45) 100%),
+        url('/assets/hero-1.jpeg') center / cover;
       border-bottom: 1px solid var(--line);
     }
-
-    .mike-hero-content { max-width: 640px; position: relative; z-index: 1; }
-
-    .mike-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border-radius: 999px;
+    .mk-hero-inner { max-width: 680px; position: relative; z-index: 1; }
+    .mk-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 999px;
       background: linear-gradient(135deg, var(--gold-3), var(--gold));
-      color: #16110a;
-      font-size: 11.5px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
+      color: #16110a; font-size: 11px; font-weight: 900;
+      letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 24px;
     }
-
-    .mike-hero h1 {
+    .mk-hero h1 {
       font-family: Georgia, serif;
-      font-size: clamp(36px, 5vw, 68px);
-      line-height: .95;
-      color: var(--gold-3);
-      margin: 0 0 10px;
+      font-size: clamp(42px, 6vw, 78px);
+      line-height: .92; color: white; margin-bottom: 6px;
     }
-
-    .mike-hero h1 span {
-      display: block;
-      color: white;
-      font-style: italic;
-      font-weight: 400;
+    .mk-hero h1 em {
+      display: block; font-style: italic; font-weight: 400;
+      color: var(--gold-3); font-size: clamp(36px, 5vw, 64px);
     }
-
-    .mike-sub {
-      font-size: 18px;
-      color: #ddd5c9;
-      line-height: 1.65;
-      margin: 14px 0 32px;
-      max-width: 560px;
+    .mk-hero-sub {
+      font-size: 18px; color: #ddd5c9; line-height: 1.7;
+      margin: 22px 0 36px; max-width: 560px;
     }
+    .mk-hero-sub strong { color: var(--gold-3); }
+    .mk-btn-gold {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 20px 32px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      color: #16110a; font-family: Georgia, serif;
+      font-size: 18px; font-weight: 900; text-decoration: none;
+      cursor: pointer; box-shadow: 0 12px 36px rgba(217,168,78,.35);
+      transition: var(--transition);
+    }
+    .mk-btn-gold:hover { filter: brightness(1.08); transform: translateY(-3px); }
+    .mk-coupon-chip {
+      display: inline-flex; flex-direction: column;
+      padding: 12px 18px; border: 1px dashed var(--line-strong);
+      border-radius: 13px; background: rgba(217,168,78,.07);
+    }
+    .mk-coupon-chip small { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+    .mk-coupon-chip strong { font-size: 24px; color: var(--gold-3); letter-spacing: 3px; font-family: Georgia, serif; }
+    .mk-coupon-chip span { font-size: 11px; color: var(--gold); margin-top: 2px; }
+    .mk-cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 
-    .mike-cta-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    /* wrap */
+    .mk-wrap { max-width: 1140px; margin: 0 auto; padding: 0 48px; }
+
+    /* sections */
+    .mk-section { padding: 60px 0; border-bottom: 1px solid var(--line-soft); }
+    .mk-eyebrow {
+      font-size: 11px; font-weight: 900; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    }
+    .mk-h2 {
+      font-family: Georgia, serif; font-size: clamp(26px, 3.5vw, 42px);
+      color: var(--gold-3); line-height: 1.1; margin-bottom: 14px;
+    }
+    .mk-lead { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 640px; }
+
+    /* Proof bar */
+    .mk-proof-bar {
+      display: flex; align-items: center; justify-content: center;
       flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(217,168,78,.1), rgba(217,168,78,.04));
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      padding: 22px 48px;
     }
-
-    .mike-buy-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 18px 28px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, var(--gold-3), var(--gold));
-      color: #16110a;
-      font-family: Georgia, serif;
-      font-size: 18px;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(217,168,78,.3);
-      transition: var(--transition);
+    .mk-proof-item {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 14px 36px; text-align: center;
     }
+    .mk-proof-item + .mk-proof-item { border-left: 1px solid var(--line); }
+    .mk-proof-item strong { font-family: Georgia, serif; font-size: 36px; color: var(--gold-3); line-height: 1; }
+    .mk-proof-item span { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    .mike-buy-btn:hover {
-      filter: brightness(1.07);
-      transform: translateY(-3px);
-      box-shadow: 0 14px 38px rgba(217,168,78,.38);
-    }
-
-    .coupon-inline {
-      display: flex;
-      flex-direction: column;
-      padding: 12px 16px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 12px;
-      background: rgba(217,168,78,.07);
-    }
-
-    .coupon-inline small {
-      font-size: 10px;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 3px;
-    }
-
-    .coupon-inline strong {
-      font-size: 22px;
-      color: var(--gold-3);
-      letter-spacing: 2px;
-      font-family: Georgia, serif;
-    }
-
-    .coupon-inline span {
-      font-size: 11px;
-      color: var(--gold);
-      margin-top: 1px;
-    }
-
-    /* ── Content wrap ──────────────────── */
-    .mike-wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 40px;
-    }
-
-    /* ── About section ─────────────────── */
-    .mike-about {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 32px;
-      align-items: start;
-      padding: 54px 0 40px;
-      border-bottom: 1px solid var(--line-soft);
-    }
-
-    .mike-about-text .eyebrow { margin-bottom: 10px; }
-
-    .mike-about-text h2 {
-      font-family: Georgia, serif;
-      font-size: clamp(26px, 3vw, 38px);
-      color: var(--gold-3);
-      margin: 0 0 16px;
-      line-height: 1.1;
-    }
-
-    .mike-about-text p {
-      color: var(--muted);
-      line-height: 1.75;
-      margin-bottom: 14px;
-      font-size: 15px;
-    }
-
-    .mike-highlight-box {
-      padding: 22px 24px;
-      border-left: 3px solid var(--gold);
-      background: rgba(217,168,78,.06);
-      border-radius: 0 12px 12px 0;
-      margin-top: 20px;
-    }
-
-    .mike-highlight-box p {
-      margin: 0;
-      font-size: 15px;
-      color: var(--gold-2);
-      font-style: italic;
-      line-height: 1.65;
-    }
-
-    /* stats card */
-    .mike-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      align-self: start;
-    }
-
-    .mike-stat {
-      padding: 22px;
-      text-align: center;
-      border: 1px solid var(--line);
-      border-radius: 16px;
+    /* Includes */
+    .mk-includes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+    .mk-inc-card {
+      padding: 26px 22px; border: 1px solid var(--line); border-radius: 18px;
       background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
-    }
-
-    .mike-stat strong {
-      display: block;
-      font-family: Georgia, serif;
-      font-size: 38px;
-      color: var(--gold-3);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .mike-stat span {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.4;
-    }
-
-    /* ── What's included ───────────────── */
-    .mike-includes {
-      padding: 48px 0 40px;
-      border-bottom: 1px solid var(--line-soft);
-    }
-
-    .mike-includes .section-header {
-      margin-bottom: 28px;
-    }
-
-    .mike-includes .section-header h2 {
-      font-family: Georgia, serif;
-      font-size: clamp(24px, 3vw, 34px);
-      color: var(--gold-3);
-      margin: 0 0 8px;
-    }
-
-    .mike-includes .section-header p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .includes-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .include-card {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: linear-gradient(145deg, rgba(18,22,20,.88), rgba(10,12,11,.92));
       transition: var(--transition);
     }
-
-    .include-card:hover {
-      border-color: var(--line-strong);
-      transform: translateY(-2px);
+    .mk-inc-card:hover { border-color: var(--line-strong); transform: translateY(-3px); }
+    .mk-inc-card .ico { font-size: 32px; display: block; margin-bottom: 14px; }
+    .mk-inc-card h3 { font-family: Georgia, serif; font-size: 17px; color: var(--gold-3); margin-bottom: 8px; }
+    .mk-inc-card p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .mk-inc-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      background: rgba(217,168,78,.12); color: var(--gold);
+      font-size: 10px; font-weight: 800; letter-spacing: .8px;
+      text-transform: uppercase; margin-bottom: 10px;
     }
 
-    .include-icon {
-      font-size: 28px;
-      margin-bottom: 12px;
-      display: block;
+    /* Testimonials */
+    .mk-testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+    .mk-testi {
+      padding: 28px 24px; border: 1px solid var(--line); border-radius: 18px;
+      background: linear-gradient(145deg, rgba(15,19,17,.95), rgba(8,10,9,.98));
+      display: flex; flex-direction: column; gap: 16px;
     }
-
-    .include-card h3 {
-      font-family: Georgia, serif;
-      font-size: 17px;
-      color: var(--gold-3);
-      margin: 0 0 8px;
+    .mk-testi-stars { color: var(--gold-3); font-size: 18px; letter-spacing: 2px; }
+    .mk-testi blockquote { color: #ddd5c9; font-size: 14.5px; line-height: 1.75; font-style: italic; flex: 1; }
+    .mk-testi-author {
+      display: flex; align-items: center; gap: 12px;
+      padding-top: 14px; border-top: 1px solid var(--line-soft);
     }
-
-    .include-card p {
-      color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
-      margin: 0;
+    .mk-testi-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      display: grid; place-items: center;
+      font-family: Georgia, serif; font-size: 17px; color: #16110a; font-weight: 900; flex-shrink: 0;
     }
+    .mk-testi-name strong { display: block; color: var(--text); font-size: 14px; }
+    .mk-testi-name span { color: var(--gold); font-size: 12px; font-weight: 700; }
 
-    /* ── For who ────────────────────────── */
-    .mike-forwho {
-      padding: 48px 0 40px;
-      border-bottom: 1px solid var(--line-soft);
+    /* Guarantee */
+    .mk-guarantee {
+      display: flex; align-items: center; gap: 32px;
+      padding: 36px 40px; border: 1px solid var(--gold);
+      border-radius: 20px; margin-top: 32px; background: rgba(217,168,78,.05);
     }
+    .mk-guarantee-icon { font-size: 56px; flex-shrink: 0; }
+    .mk-guarantee h3 { font-family: Georgia, serif; font-size: 22px; color: var(--gold-3); margin-bottom: 8px; }
+    .mk-guarantee p { color: var(--muted); font-size: 15px; line-height: 1.7; }
 
-    .forwho-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-top: 24px;
+    /* FAQ */
+    .mk-faq { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; }
+    .mk-faq-item { border: 1px solid var(--line); border-radius: 14px; background: rgba(12,15,13,.85); overflow: hidden; }
+    .mk-faq-q {
+      width: 100%; text-align: left; padding: 18px 22px;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      color: var(--text); font-size: 15px; font-weight: 700;
     }
+    .mk-faq-q .arrow { color: var(--gold); font-size: 18px; transition: transform .25s; flex-shrink: 0; }
+    .mk-faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease; color: var(--muted); font-size: 14.5px; line-height: 1.75; }
+    .mk-faq-a-inner { padding: 0 22px 18px; }
+    .mk-faq-item.open .mk-faq-q .arrow { transform: rotate(180deg); }
+    .mk-faq-item.open .mk-faq-a { max-height: 300px; }
 
-    .forwho-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: rgba(255,255,255,.025);
+    /* Final CTA */
+    .mk-final { padding: 70px 0 80px; text-align: center; }
+    .mk-final h2 { font-family: Georgia, serif; font-size: clamp(32px, 5vw, 58px); color: white; line-height: 1; margin-bottom: 10px; }
+    .mk-final h2 em { color: var(--gold-3); font-style: italic; }
+    .mk-final p { color: var(--muted); font-size: 16px; line-height: 1.7; max-width: 540px; margin: 14px auto 36px; }
+    .mk-final .mk-coupon-chip { margin: 28px auto 0; display: inline-flex; flex-direction: row; align-items: center; gap: 16px; }
+    .mk-final .mk-coupon-chip small { margin: 0; }
+
+    /* Footer */
+    .mk-foot {
+      margin: 0 48px 48px; padding: 20px 28px;
+      border: 1px solid var(--line); border-radius: 14px; background: rgba(8,10,9,.8);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
+    .mk-foot strong { font-family: Georgia, serif; color: var(--gold-3); letter-spacing: 1px; }
+    .mk-foot a { color: var(--muted); font-size: 13px; text-decoration: none; }
+    .mk-foot a:hover { color: var(--gold-2); }
 
-    .forwho-check {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(217,168,78,.15);
-      border: 1px solid var(--gold);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-      color: var(--gold-3);
-      font-size: 12px;
-      font-weight: 900;
+    /* Responsive */
+    @media (max-width: 960px) {
+      .mk-hero { padding: 56px 24px; min-height: auto; }
+      .mk-wrap { padding: 0 24px; }
+      .mk-includes-grid { grid-template-columns: 1fr 1fr; }
+      .mk-testimonials-grid { grid-template-columns: 1fr; }
+      .mk-proof-bar { padding: 16px 24px; }
+      .mk-proof-item { padding: 12px 20px; }
+      .mk-guarantee { flex-direction: column; text-align: center; padding: 28px 24px; }
+      .mk-foot { margin: 0 24px 32px; }
     }
-
-    .forwho-item p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .forwho-item p b {
-      display: block;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-
-    /* ── Final CTA ───────────────────── */
-    .mike-final-cta {
-      padding: 54px 0 0;
-      text-align: center;
-    }
-
-    .mike-final-cta h2 {
-      font-family: Georgia, serif;
-      font-size: clamp(28px, 3.5vw, 46px);
-      color: var(--gold-3);
-      margin: 0 0 14px;
-      line-height: 1.1;
-    }
-
-    .mike-final-cta p {
-      color: var(--muted);
-      max-width: 560px;
-      margin: 0 auto 32px;
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    .mike-final-cta .coupon-inline {
-      display: inline-flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 14px;
-      margin: 24px auto 0;
-    }
-
-    .mike-final-cta .coupon-inline small {
-      margin: 0;
-    }
-
-    /* ── Responsive ─────────────────── */
-    @media (max-width: 900px) {
-      .mike-hero { padding: 48px 20px; min-height: auto; }
-      .mike-wrap { padding: 0 20px; }
-      .mike-about { grid-template-columns: 1fr; }
-      .mike-stats { grid-template-columns: repeat(2, 1fr); }
-      .includes-grid { grid-template-columns: 1fr 1fr; }
-      .forwho-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      .includes-grid { grid-template-columns: 1fr; }
-      .mike-stats { grid-template-columns: 1fr 1fr; }
-      .mike-cta-row { flex-direction: column; align-items: stretch; }
-      .mike-buy-btn { justify-content: center; }
-      .mike-final-cta .coupon-inline { flex-direction: column; }
+    @media (max-width: 640px) {
+      .mk-includes-grid { grid-template-columns: 1fr; }
+      .mk-cta-row { flex-direction: column; align-items: stretch; }
+      .mk-btn-gold { justify-content: center; }
+      .mk-proof-bar { flex-direction: column; }
+      .mk-proof-item + .mk-proof-item { border-left: none; border-top: 1px solid var(--line); }
+      .mk-final .mk-coupon-chip { flex-direction: column; }
     }
   </style>
 </head>
 <body>
   ${renderTopbar("curso")}
+  <div class="mike">
 
-  <main class="mike-page">
-
-    <!-- Hero -->
-    <section class="mike-hero">
-      <div class="mike-hero-content">
-        <div class="mike-kicker">✦ Preparatório PMBA</div>
-        <h1>Manual<span>do Mike</span></h1>
-        <p class="mike-sub">
-          O preparatório completo para o concurso da Polícia Militar da Bahia.
-          Aulas, estratégia, questões, simulados e tudo o que você precisa para
-          chegar à prova com máxima performance.
-        </p>
-        <div class="mike-cta-row">
-          <a class="mike-buy-btn" href="${MIKE_URL}" target="_blank" rel="noopener">
-            Garantir meu acesso →
-          </a>
-          <div class="coupon-inline">
-            <small>Cupom de desconto</small>
-            <strong>${MIKE_COUPON}</strong>
-            <span>Use no checkout</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="mike-wrap">
-
-      <!-- About -->
-      <div class="mike-about">
-        <div class="mike-about-text">
-          <p class="eyebrow">O que é o Manual do Mike</p>
-          <h2>O preparatório que transforma candidatas em aprovadas</h2>
-          <p>
-            O <strong style="color:var(--gold-3)">Preparatório PMBA – Manual do Mike</strong> é um
-            curso estruturado e focado nos padrões reais de cobrança do concurso da Polícia Militar
-            da Bahia. Criado para quem precisa de direção, não de volume desnecessário.
-          </p>
-          <p>
-            Ao invés de estudar o edital de forma genérica, o Manual do Mike aplica
-            <strong style="color:var(--gold-3)">engenharia reversa da banca</strong>: cada
-            disciplina é trabalhada com base no que realmente cai na prova, com linguagem clara
-            e objetiva para quem quer resultado.
-          </p>
-          <p>
-            Combinado com a plataforma Elite Feminina — que gera seu cronograma Pomodoro
-            personalizado e entrega os materiais estratégicos de apoio — você terá uma
-            preparação completa, do zero à aprovação.
-          </p>
-          <div class="mike-highlight-box">
-            <p>
-              "A aprovação é uma questão de estratégia. Estudar mais não basta —
-              é preciso estudar o certo, na ordem certa, com o método certo."
-            </p>
-          </div>
-        </div>
-
-        <div class="mike-stats">
-          <div class="mike-stat">
-            <strong>12</strong>
-            <span>Disciplinas cobertas pelo edital PMBA</span>
-          </div>
-          <div class="mike-stat">
-            <strong>80</strong>
-            <span>Questões na prova objetiva</span>
-          </div>
-          <div class="mike-stat">
-            <strong>FCC</strong>
-            <span>Banca organizada com padrão preditivo</span>
-          </div>
-          <div class="mike-stat">
-            <strong>100%</strong>
-            <span>Focado em SD PMBA e CFO PMBA</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- What's included -->
-      <div class="mike-includes">
-        <div class="section-header">
-          <h2>O que você encontra no preparatório</h2>
-          <p>Conteúdo estruturado para cobrir todas as frentes do concurso com eficiência.</p>
-        </div>
-        <div class="includes-grid">
-          <div class="include-card">
-            <span class="include-icon">📖</span>
-            <h3>Aulas por disciplina</h3>
-            <p>Conteúdo organizado por matéria, focado nos tópicos com maior peso e frequência de cobrança na FCC.</p>
-          </div>
-          <div class="include-card">
-            <span class="include-icon">⚖️</span>
-            <h3>Bloco jurídico completo</h3>
-            <p>Constitucional, Administrativo, Penal, Penal Militar, Direitos Humanos e Igualdade Racial — do jeito que a banca cobra.</p>
-          </div>
-          <div class="include-card">
-            <span class="include-icon">📝</span>
-            <h3>Questões e gabaritos</h3>
-            <p>Exercícios comentados com análise das alternativas e padrões de eliminação usados pela FCC.</p>
-          </div>
-          <div class="include-card">
-            <span class="include-icon">✍️</span>
-            <h3>Redação dissertativa</h3>
-            <p>Estrutura, modelo e correção focada nos critérios da banca para a prova discursiva do concurso.</p>
-          </div>
-          <div class="include-card">
-            <span class="include-icon">🎯</span>
-            <h3>Simulados por edital</h3>
-            <p>Treinos com o mesmo formato e tempo da prova real para você chegar preparada no dia da avaliação.</p>
-          </div>
-          <div class="include-card">
-            <span class="include-icon">🗺️</span>
-            <h3>Estratégia de estudo</h3>
-            <p>Roteiro de revisões, método de absorção e priorização dos conteúdos de maior retorno para a nota final.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- For who -->
-      <div class="mike-forwho">
-        <p class="eyebrow">Para quem é este preparatório</p>
-        <h2 style="font-family:Georgia,serif;font-size:clamp(22px,3vw,32px);color:var(--gold-3);margin:10px 0 0;">
-          Este curso é para você se…
-        </h2>
-        <div class="forwho-grid">
-          <div class="forwho-item">
-            <span class="forwho-check">✓</span>
-            <p><b>Está se preparando para SD PMBA ou CFO PMBA</b>e quer um preparatório focado, sem enrolação.</p>
-          </div>
-          <div class="forwho-item">
-            <span class="forwho-check">✓</span>
-            <p><b>Estuda sozinha e precisa de direção</b>para não perder tempo com conteúdo de baixo impacto.</p>
-          </div>
-          <div class="forwho-item">
-            <span class="forwho-check">✓</span>
-            <p><b>Já tentou antes e quer uma abordagem diferente</b>— baseada nos padrões reais da FCC.</p>
-          </div>
-          <div class="forwho-item">
-            <span class="forwho-check">✓</span>
-            <p><b>Tem tempo limitado e precisa de eficiência</b>máxima em cada hora dedicada ao estudo.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Final CTA -->
-      <div class="mike-final-cta">
-        <h2>Pronta para a missão?</h2>
-        <p>
-          Garanta agora o acesso ao Preparatório PMBA – Manual do Mike e
-          use o cupom exclusivo <strong style="color:var(--gold-3)">${MIKE_COUPON}</strong> para
-          garantir seu desconto no checkout.
-        </p>
-        <a class="mike-buy-btn" href="${MIKE_URL}" target="_blank" rel="noopener">
-          Garantir meu acesso com desconto →
+  <!-- HERO -->
+  <section class="mk-hero">
+    <div class="mk-hero-inner">
+      <div class="mk-badge">✦ Preparatório PMBA</div>
+      <h1>DO ZERO À<em>APROVAÇÃO</em></h1>
+      <p class="mk-hero-sub">
+        O preparatório mais completo das carreiras policiais,
+        <strong>criado por quem veste a farda</strong>. Método, estratégia e
+        acompanhamento do início ao fim — focado em SD PMBA e CFO PMBA.
+      </p>
+      <div class="mk-cta-row">
+        <a class="mk-btn-gold" href="https://pay.cakto.com.br/33krayz?affiliate=s7XUk8bn" target="_blank" rel="noopener">
+          COMEÇAR MINHA PREPARAÇÃO →
         </a>
-        <div class="coupon-inline">
-          <small>Cupom exclusivo Elite Feminina</small>
-          <strong>${MIKE_COUPON}</strong>
-          <span>↑ Copie e cole no checkout para o desconto</span>
+        <div class="mk-coupon-chip">
+          <small>Cupom de desconto</small>
+          <strong>Cris15</strong>
+          <span>Use no checkout</span>
         </div>
       </div>
-
     </div>
-  </main>
+  </section>
 
-  <footer style="margin:40px 40px 0;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;background:rgba(10,12,11,.8);color:var(--muted);">
-    <strong style="color:var(--gold-3)">ELITE FEMININA — MISSÃO FARDA</strong>
-    <a href="/" style="color:var(--muted);font-size:13px;">← Voltar à plataforma</a>
+  <!-- PROOF BAR -->
+  <div class="mk-proof-bar">
+    <div class="mk-proof-item"><strong>40.000+</strong><span>Questões no banco</span></div>
+    <div class="mk-proof-item"><strong>100</strong><span>Dias de mentoria coletiva</span></div>
+    <div class="mk-proof-item"><strong>12x</strong><span>Parcelas sem juros</span></div>
+    <div class="mk-proof-item"><strong>7 dias</strong><span>Garantia incondicional</span></div>
+    <div class="mk-proof-item"><strong>FCC</strong><span>Foco total na banca</span></div>
+  </div>
+
+  <div class="mk-wrap">
+
+    <!-- O QUE É -->
+    <div class="mk-section">
+      <p class="mk-eyebrow">O preparatório</p>
+      <h2 class="mk-h2">O Manual do Mike para o concurso PMBA</h2>
+      <p class="mk-lead">
+        O <strong style="color:var(--gold-3)">Preparatório PMBA – Manual do Mike</strong> é um
+        curso anual completo e atualizado, criado com foco total nos padrões reais de cobrança da
+        banca FCC. Aqui você não perde tempo com conteúdo irrelevante: cada aula é estruturada com
+        base no que realmente cai na prova — da teoria às questões, da redação à estratégia.
+      </p>
+      <p class="mk-lead" style="margin-top:14px;">
+        Combinado com a <strong style="color:var(--gold-3)">plataforma Elite Feminina</strong>,
+        que gera seu cronograma Pomodoro personalizado, você terá uma preparação completa e
+        inteligente do zero à aprovação.
+      </p>
+    </div>
+
+    <!-- INCLUDES -->
+    <div class="mk-section">
+      <p class="mk-eyebrow">O que está incluso</p>
+      <h2 class="mk-h2">Tudo o que você precisa em um só lugar</h2>
+      <p class="mk-lead">Preparação completa — conteúdo, prática, redação, estratégia e acompanhamento.</p>
+      <div class="mk-includes-grid">
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">Conteúdo</span>
+          <span class="ico">📖</span>
+          <h3>Curso Preparatório Anual Atualizado</h3>
+          <p>Aulas por disciplina com foco nos tópicos de maior peso e frequência na FCC — da teoria ao raciocínio jurídico.</p>
+        </div>
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">Acompanhamento</span>
+          <span class="ico">🎯</span>
+          <h3>Mentoria Coletiva 100 Dias</h3>
+          <p>Aulas ao vivo semanais durante 100 dias de imersão total. Dúvidas respondidas, ritmo mantido e constância garantida.</p>
+        </div>
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">Prática</span>
+          <span class="ico">📝</span>
+          <h3>Banco de 40.000+ Questões</h3>
+          <p>Questões comentadas por disciplina e nível, com análise das alternativas e padrão FCC de eliminação.</p>
+        </div>
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">IA</span>
+          <span class="ico">🤖</span>
+          <h3>RedaMike IA — Correção de Redação</h3>
+          <p>Inteligência artificial que corrige sua redação dissertativa com os critérios reais da banca, em segundos.</p>
+        </div>
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">Simulados</span>
+          <span class="ico">⏱️</span>
+          <h3>Simulados por Edital</h3>
+          <p>Treinos com o mesmo formato, quantidade de questões e tempo da prova real — para você chegar preparada no dia.</p>
+        </div>
+        <div class="mk-inc-card">
+          <span class="mk-inc-tag">Suporte</span>
+          <span class="ico">💬</span>
+          <h3>Suporte Completo</h3>
+          <p>Acesso ao suporte durante toda a preparação. Dúvidas sobre conteúdo, plataforma ou estratégia — respondidas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <div class="mk-section">
+      <p class="mk-eyebrow">Resultados reais</p>
+      <h2 class="mk-h2">Quem estudou, aprovou</h2>
+      <p class="mk-lead">Com dedicação e constância nos estudos, candidatas chegam à aprovação.</p>
+      <div class="mk-testimonials-grid">
+        <div class="mk-testi">
+          <div class="mk-testi-stars">★★★★★</div>
+          <blockquote>"Com dedicação e constância nos estudos, alcancei minha aprovação. O método faz toda a diferença — você sabe exatamente o que estudar e como priorizar."</blockquote>
+          <div class="mk-testi-author">
+            <div class="mk-testi-avatar">L</div>
+            <div class="mk-testi-name"><strong>Lavínia</strong><span>✦ APROVADA</span></div>
+          </div>
+        </div>
+        <div class="mk-testi">
+          <div class="mk-testi-stars">★★★★★</div>
+          <blockquote>"O banco de questões e as aulas ao vivo foram fundamentais. Cada aula me deixava mais segura sobre o que a banca realmente cobra. Fui aprovado!"</blockquote>
+          <div class="mk-testi-author">
+            <div class="mk-testi-avatar">J</div>
+            <div class="mk-testi-name"><strong>Jozimar</strong><span>✦ APROVADO</span></div>
+          </div>
+        </div>
+        <div class="mk-testi">
+          <div class="mk-testi-stars">★★★★★</div>
+          <blockquote>"Nunca pensei que conseguiria em tão pouco tempo. A metodologia de engenharia reversa da banca é real — você estuda o que vai cair, sem desperdício."</blockquote>
+          <div class="mk-testi-author">
+            <div class="mk-testi-avatar">M</div>
+            <div class="mk-testi-name"><strong>Monizi</strong><span>✦ APROVADA</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUARANTEE -->
+    <div class="mk-section">
+      <p class="mk-eyebrow">Sem riscos</p>
+      <h2 class="mk-h2">Garantia incondicional de 7 dias</h2>
+      <div class="mk-guarantee">
+        <div class="mk-guarantee-icon">🛡️</div>
+        <div>
+          <h3>Compre sem medo</h3>
+          <p>Se em até <strong style="color:var(--gold-3)">7 dias corridos</strong> após a compra você
+          não ficar satisfeita com o preparatório, basta solicitar o reembolso e devolvemos
+          <strong style="color:var(--gold-3)">100% do valor pago</strong> — sem burocracia,
+          sem perguntas. Você não tem nada a perder, só a aprovação a ganhar.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mk-section">
+      <p class="mk-eyebrow">Dúvidas frequentes</p>
+      <h2 class="mk-h2">Perguntas e respostas</h2>
+      <div class="mk-faq">
+        <div class="mk-faq-item">
+          <button class="mk-faq-q">Quando recebo acesso após a compra?<span class="arrow">▾</span></button>
+          <div class="mk-faq-a"><div class="mk-faq-a-inner">O acesso é liberado imediatamente após a confirmação do pagamento, independente da forma escolhida — PIX, transferência ou cartão de crédito.</div></div>
+        </div>
+        <div class="mk-faq-item">
+          <button class="mk-faq-q">O curso é indicado para quem está começando do zero?<span class="arrow">▾</span></button>
+          <div class="mk-faq-a"><div class="mk-faq-a-inner">Sim. O preparatório atende desde iniciantes até candidatos avançados. As aulas são organizadas de forma progressiva com base nos padrões da FCC.</div></div>
+        </div>
+        <div class="mk-faq-item">
+          <button class="mk-faq-q">Posso assistir as aulas quantas vezes quiser?<span class="arrow">▾</span></button>
+          <div class="mk-faq-a"><div class="mk-faq-a-inner">Sim. Durante todo o período de acesso você pode rever qualquer aula sem limite de visualizações.</div></div>
+        </div>
+        <div class="mk-faq-item">
+          <button class="mk-faq-q">Quais formas de pagamento são aceitas?<span class="arrow">▾</span></button>
+          <div class="mk-faq-a"><div class="mk-faq-a-inner">PIX, transferência bancária e cartão de crédito em até 12 parcelas. Use o cupom <strong style="color:var(--gold-3)">Cris15</strong> no checkout para garantir seu desconto exclusivo.</div></div>
+        </div>
+        <div class="mk-faq-item">
+          <button class="mk-faq-q">O preparatório cobre SD PMBA e CFO PMBA?<span class="arrow">▾</span></button>
+          <div class="mk-faq-a"><div class="mk-faq-a-inner">Sim. O curso cobre os dois cargos com conteúdo organizado por edital, focado no que realmente cai na prova da FCC para ambos.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /mk-wrap -->
+
+  <!-- FINAL CTA -->
+  <div class="mk-final">
+    <h2>PRONTA PARA A<br><em>MISSÃO?</em></h2>
+    <p>Garanta agora o acesso ao Preparatório PMBA – Manual do Mike e use o cupom exclusivo
+    <strong style="color:var(--gold-3)">Cris15</strong> para o desconto no checkout.</p>
+    <a class="mk-btn-gold" href="https://pay.cakto.com.br/33krayz?affiliate=s7XUk8bn" target="_blank" rel="noopener">
+      GARANTIR MINHA APROVAÇÃO →
+    </a>
+    <div class="mk-coupon-chip">
+      <small>Cupom exclusivo Elite Feminina</small>
+      <strong>Cris15</strong>
+      <span>↑ Copie e cole no checkout</span>
+    </div>
+  </div>
+
+  </div><!-- /mike -->
+
+  <footer class="mk-foot">
+    <strong>ELITE FEMININA — MISSÃO FARDA</strong>
+    <a href="/">← Voltar à plataforma</a>
   </footer>
+
+  <script>
+    document.querySelectorAll('.mk-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.mk-faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.mk-faq-item.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
 
 </body>
 </html>`;
