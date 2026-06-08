@@ -18,17 +18,36 @@
       </span>
     </a>
 
-    <nav aria-label="Navegação principal">
+    <nav id="mainNav" aria-label="Navegação principal">
       <a href="#plano">Gerar plano</a>
       <a href="#materiais">Materiais</a>
-      <a href="#resultado">Resultado</a>
-      <a href="#pomodoro">Pomodoro</a>
       <a href="#dicas">Dicas do edital</a>
-      <a href="/curso" class="nav-highlight">Curso completo</a>
-      <a href="/admin" id="adminLink" hidden>Admin</a>
+      <a href="/minha-area" class="nav-highlight">Minha Área</a>
+      <a href="/curso">Curso completo</a>
+      <span id="adminNavWrap" hidden><a href="/admin">Admin</a></span>
       <button type="button" class="logout-link" id="logoutBtn">Sair</button>
     </nav>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <span class="crest" style="width:38px;height:38px;font-size:18px;">✦</span>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
+    </div>
+    <a href="#plano">Gerar plano</a>
+    <a href="#materiais">Materiais</a>
+    <a href="#dicas">Dicas do edital</a>
+    <a href="/minha-area">Minha Área</a>
+    <a href="/curso">Curso completo</a>
+    <span id="adminMobileWrap" hidden><a href="/admin">Admin</a></span>
+    <button type="button" class="mobile-logout" id="mobileLogoutBtn">Sair da conta</button>
+  </nav>
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
@@ -379,5 +398,33 @@
   </footer>
 
   <script src="/script.js"></script>
+  <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburgerBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const overlay   = document.getElementById('mobileOverlay');
+    const closeBtn  = document.getElementById('mobileNavClose');
+
+    function openMenu()  { mobileNav.classList.add('open'); overlay.classList.add('show'); hamburger.setAttribute('aria-expanded','true'); mobileNav.setAttribute('aria-hidden','false'); }
+    function closeMenu() { mobileNav.classList.remove('open'); overlay.classList.remove('show'); hamburger.setAttribute('aria-expanded','false'); mobileNav.setAttribute('aria-hidden','true'); }
+
+    hamburger.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    // Logout
+    async function logout() { await fetch('/logout',{method:'POST'}); window.location.href='/login'; }
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+
+    // Show admin link if admin
+    fetch('/me').then(r => r.ok ? r.json() : null).then(u => {
+      if (u && u.role === 'admin') {
+        document.getElementById('adminNavWrap').removeAttribute('hidden');
+        document.getElementById('adminMobileWrap').removeAttribute('hidden');
+      }
+    });
+  </script>
 </body>
 </html>

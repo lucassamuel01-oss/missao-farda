@@ -1470,6 +1470,143 @@ details p{
 }
 
 /* =========================
+   HAMBURGER / MOBILE NAV
+========================= */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(217,168,78,.06);
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
+}
+
+.hamburger:hover {
+  background: rgba(217,168,78,.12);
+  border-color: var(--line-strong);
+}
+
+.hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold-2);
+  transition: var(--transition);
+}
+
+.mobile-nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(4px);
+  z-index: 198;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.mobile-nav-overlay.show {
+  opacity: 1;
+}
+
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 85vw);
+  z-index: 199;
+  background: #0c100e;
+  border-left: 1px solid var(--line);
+  padding: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform .32s cubic-bezier(.25,.8,.25,1);
+  overflow-y: auto;
+}
+
+.mobile-nav.open {
+  transform: translateX(0);
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+
+.mobile-nav-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: var(--transition);
+}
+
+.mobile-nav-close:hover {
+  color: var(--gold-3);
+  border-color: var(--line-strong);
+}
+
+.mobile-nav a {
+  display: block;
+  padding: 14px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  transition: var(--transition);
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+  color: var(--gold-3);
+  background: rgba(217,168,78,.06);
+}
+
+.mobile-nav span { display: contents; }
+
+.mobile-logout {
+  margin: 20px 20px 0;
+  padding: 13px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.mobile-logout:hover {
+  color: var(--danger);
+  border-color: rgba(255,103,103,.35);
+  background: rgba(255,103,103,.06);
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
 
@@ -1514,11 +1651,19 @@ details p{
 @media (max-width:768px){
   .topbar{
     padding:0 18px;
-    min-height:74px;
+    min-height:68px;
   }
 
-  nav{
+  nav#mainNav, nav:not(.mobile-nav){
     display:none;
+  }
+
+  .hamburger{
+    display:flex;
+  }
+
+  .mobile-nav-overlay{
+    display:block;
   }
 
   .hero,

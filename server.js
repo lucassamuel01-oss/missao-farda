@@ -187,6 +187,22 @@ app.get("/me", (req, res) => {
   });
 });
 
+// ── Current user ─────────────────────────────────────────────────────────────
+
+app.get("/me", (req, res) => {
+  if (!req.currentUser) return res.status(401).json({ success: false });
+  const { password: _, ...safe } = req.currentUser;
+  res.json(safe);
+});
+
+// ── Student area ──────────────────────────────────────────────────────────────
+
+app.get("/minha-area", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "minha-area.html"));
+});
+
+// ── Admin panel ───────────────────────────────────────────────────────────────
+
 app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
@@ -1086,6 +1102,63 @@ function gerarPlano(dados) {
   };
 }
 
+function renderTopbar(activePage = "") {
+  return `
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="crest">✦</span>
+      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
+    </a>
+    <nav id="mainNav">
+      <a href="/#plano">Gerar plano</a>
+      <a href="/#materiais">Materiais</a>
+      <a href="/#dicas">Dicas do edital</a>
+      <a href="/minha-area"${activePage==="area"?' class="nav-highlight"':""}>Minha Área</a>
+      <a href="/curso"${activePage==="curso"?' class="nav-highlight"':""}>Curso completo</a>
+      <span id="adminNavWrap" hidden><a href="/admin">Admin</a></span>
+      <button type="button" class="logout-link" id="logoutBtn">Sair</button>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+  <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <span class="crest" style="width:38px;height:38px;font-size:18px;">✦</span>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
+    </div>
+    <a href="/#plano">Gerar plano</a>
+    <a href="/#materiais">Materiais</a>
+    <a href="/#dicas">Dicas do edital</a>
+    <a href="/minha-area"${activePage==="area"?' class="active"':""}>Minha Área</a>
+    <a href="/curso"${activePage==="curso"?' class="active"':""}>Curso completo</a>
+    <span id="adminMobileWrap" hidden><a href="/admin">Admin</a></span>
+    <button type="button" class="mobile-logout" id="mobileLogoutBtn">Sair da conta</button>
+  </nav>
+  <script>
+    (function(){
+      var h=document.getElementById('hamburgerBtn'),
+          n=document.getElementById('mobileNav'),
+          o=document.getElementById('mobileOverlay'),
+          c=document.getElementById('mobileNavClose');
+      function open(){n.classList.add('open');o.classList.add('show');h.setAttribute('aria-expanded','true');n.setAttribute('aria-hidden','false');}
+      function close(){n.classList.remove('open');o.classList.remove('show');h.setAttribute('aria-expanded','false');n.setAttribute('aria-hidden','true');}
+      h.addEventListener('click',open);c.addEventListener('click',close);o.addEventListener('click',close);
+      n.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+      async function logout(){await fetch('/logout',{method:'POST'});window.location.href='/login';}
+      document.getElementById('logoutBtn').addEventListener('click',logout);
+      document.getElementById('mobileLogoutBtn').addEventListener('click',logout);
+      fetch('/me').then(function(r){return r.ok?r.json():null;}).then(function(u){
+        if(u&&u.role==='admin'){
+          document.getElementById('adminNavWrap').removeAttribute('hidden');
+          document.getElementById('adminMobileWrap').removeAttribute('hidden');
+        }
+      });
+    })();
+  </script>`;
+}
+
 function renderCursoPage() {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -1096,17 +1169,7 @@ function renderCursoPage() {
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="/">
-      <span class="crest">✦</span>
-      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
-    </a>
-    <nav>
-      <a href="/">Início</a>
-      <a href="/#dicas">Dicas do edital</a>
-      <a href="/#plano">Gerar plano</a>
-    </nav>
-  </header>
+  ${renderTopbar("curso")}
 
   <main class="course-page">
     <section class="course-hero glass">
@@ -1215,17 +1278,10 @@ function renderPlanoPage(dados, plano) {
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="result-page">
-  <header class="topbar result-topbar">
-    <a href="/" class="brand">
-      <span class="crest">✦</span>
-      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
-    </a>
-    <nav>
-      <a href="/">Novo plano</a>
-      <a href="/curso" class="nav-highlight">Curso completo</a>
-      <button onclick="window.print()" class="btn small">Salvar PDF</button>
-    </nav>
-  </header>
+  ${renderTopbar()}
+  <div style="display:flex;justify-content:flex-end;padding:8px 36px 0;">
+    <button onclick="window.print()" class="btn small">Salvar PDF</button>
+  </div>
 
   <main class="result-wrap">
     <section class="pdf-cover glass">

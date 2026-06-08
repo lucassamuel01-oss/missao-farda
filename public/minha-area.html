@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minha Área — Elite Feminina Missão Farda</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .area-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Greeting ─────────────────────── */
+    .greeting {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .greeting-text .eyebrow { margin-bottom: 6px; }
+
+    .greeting-text h1 {
+      font-size: clamp(26px, 4vw, 42px);
+      margin: 0 0 8px;
+      line-height: 1.1;
+    }
+
+    .greeting-text p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .access-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 22px;
+      border: 1px solid var(--gold);
+      border-radius: 14px;
+      background: rgba(217,168,78,.08);
+      text-align: center;
+      min-width: 160px;
+    }
+
+    .access-badge span {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .access-badge strong {
+      font-size: 15px;
+      color: var(--gold-3);
+    }
+
+    .access-badge .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    /* ── Quick actions ────────────────── */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .quick-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(217,168,78,.05);
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .quick-card:hover {
+      border-color: var(--gold);
+      background: rgba(217,168,78,.1);
+      transform: translateY(-2px);
+    }
+
+    .quick-icon {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .quick-card b {
+      display: block;
+      color: var(--gold-3);
+      font-size: 14px;
+    }
+
+    .quick-card small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── Section header ───────────────── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      color: var(--gold-3);
+      margin: 0;
+    }
+
+    .section-header span {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* ── PDF grid ─────────────────────── */
+    .pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .pdf-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .pdf-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 18px 18px 0 0;
+    }
+
+    .pdf-card.cat-estrategia::before { background: linear-gradient(90deg, var(--gold-3), var(--gold)); }
+    .pdf-card.cat-questoes::before   { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+    .pdf-card.cat-redacao::before    { background: linear-gradient(90deg, #34d399, #059669); }
+    .pdf-card.cat-taf::before        { background: linear-gradient(90deg, #f87171, #dc2626); }
+
+    .pdf-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .pdf-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: max-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .pdf-card.cat-estrategia .pdf-tag { background: rgba(217,168,78,.18); color: var(--gold-2); border: 1px solid rgba(217,168,78,.35); }
+    .pdf-card.cat-questoes   .pdf-tag { background: rgba(167,139,250,.18); color: #c4b5fd; border: 1px solid rgba(167,139,250,.35); }
+    .pdf-card.cat-redacao    .pdf-tag { background: rgba(52,211,153,.18); color: #6ee7b7; border: 1px solid rgba(52,211,153,.35); }
+    .pdf-card.cat-taf        .pdf-tag { background: rgba(248,113,113,.18); color: #fca5a5; border: 1px solid rgba(248,113,113,.35); }
+
+    .pdf-card h3 {
+      font-family: Georgia, serif;
+      font-size: 19px;
+      color: var(--gold-3);
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .pdf-card p {
+      flex: 1;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .pdf-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pdf-highlights li {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.4;
+      list-style: none;
+    }
+
+    .pdf-highlights li::before {
+      content: "✓";
+      color: var(--gold);
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pdf-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pdf-btn-primary {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      color: #16110a;
+      font-weight: 900;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pdf-btn-primary:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .pdf-btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--gold-3);
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pdf-btn-ghost:hover {
+      border-color: var(--line-strong);
+      background: rgba(217,168,78,.06);
+    }
+
+    /* ── Plan CTA ─────────────────────── */
+    .plan-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding: 30px;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      background: rgba(217,168,78,.06);
+    }
+
+    .plan-cta h3 {
+      font-family: Georgia, serif;
+      font-size: 22px;
+      color: var(--gold-3);
+      margin: 0 0 8px;
+    }
+
+    .plan-cta p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+      max-width: 540px;
+    }
+
+    /* ── Responsive ──────────────────── */
+    @media (max-width: 600px) {
+      .greeting { flex-direction: column; align-items: flex-start; }
+      .access-badge { width: 100%; flex-direction: row; justify-content: center; }
+      .plan-cta { flex-direction: column; }
+      .plan-cta a { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="crest">✦</span>
+      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
+    </a>
+
+    <nav id="mainNav">
+      <a href="/#materiais">Materiais</a>
+      <a href="/#plano">Gerar plano</a>
+      <a href="/#dicas">Dicas</a>
+      <a href="/minha-area" class="nav-highlight">Minha Área</a>
+      <a href="/curso">Curso completo</a>
+      <span id="adminNavLink" hidden><a href="/admin">Admin</a></span>
+      <button type="button" class="logout-link" id="logoutBtn">Sair</button>
+    </nav>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <span class="crest" style="width:38px;height:38px;font-size:18px;">✦</span>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
+    </div>
+    <a href="/#materiais">Materiais</a>
+    <a href="/#plano">Gerar plano</a>
+    <a href="/#dicas">Dicas do edital</a>
+    <a href="/minha-area" class="active">Minha Área</a>
+    <a href="/curso">Curso completo</a>
+    <span id="adminMobileLink" hidden><a href="/admin">Admin</a></span>
+    <button type="button" class="mobile-logout" id="mobileLogoutBtn">Sair da conta</button>
+  </nav>
+
+  <main class="area-wrap">
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <div class="greeting-text">
+        <p class="eyebrow">Bem-vinda de volta</p>
+        <h1 id="greetingName">Carregando<span>sua área</span></h1>
+        <p>Aqui estão todos os seus materiais premium e atalhos para avançar na missão.</p>
+      </div>
+      <div class="access-badge">
+        <span>Status do acesso</span>
+        <strong><span class="status-dot"></span>Ativo</strong>
+        <strong id="accessExpiry" style="font-size:13px;color:var(--muted);">—</strong>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a href="/#plano" class="quick-card">
+        <span class="quick-icon">🚀</span>
+        <div><b>Gerar plano de estudos</b><small>Cronograma Pomodoro personalizado</small></div>
+      </a>
+      <a href="/#dicas" class="quick-card">
+        <span class="quick-icon">🎯</span>
+        <div><b>Dicas do edital</b><small>Estratégia real por concurso</small></div>
+      </a>
+      <a href="/curso" class="quick-card">
+        <span class="quick-icon">📚</span>
+        <div><b>Curso completo</b><small>Aulas, questões e simulados</small></div>
+      </a>
+    </div>
+
+    <!-- PDF Materials -->
+    <div class="section-header">
+      <h2>Materiais Premium</h2>
+      <span>4 guias exclusivos</span>
+    </div>
+
+    <div class="pdf-grid">
+
+      <!-- 1. Código da Aprovação -->
+      <div class="pdf-card cat-estrategia">
+        <div class="pdf-tag">★ Estratégia</div>
+        <h3>O Código da Aprovação PMBA</h3>
+        <p>Engenharia reversa da banca FCC. Descubra como hackear o gabarito analisando os padrões reais de cobrança por disciplina.</p>
+        <ul class="pdf-highlights">
+          <li>Raio-X de cada matéria (Português, Direito, História…)</li>
+          <li>Padrões de eliminação de alternativas</li>
+          <li>Scripts e macetes por disciplina jurídica</li>
+          <li>A técnica da palavra restritiva absoluta</li>
+        </ul>
+        <div class="pdf-actions">
+          <a class="pdf-btn-primary" href="/assets/pdfs/codigo-da-aprovacao-pmba-elite-feminina.pdf" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir PDF
+          </a>
+          <a class="pdf-btn-ghost" href="/assets/pdfs/codigo-da-aprovacao-pmba-elite-feminina.pdf" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 2. Resolução Estratégica -->
+      <div class="pdf-card cat-questoes">
+        <div class="pdf-tag">◈ Questões</div>
+        <h3>Resolução Estratégica Premium</h3>
+        <p>Transforme cada questão resolvida em um diagnóstico preciso. Método para resolver, errar com consciência e evoluir com consistência.</p>
+        <ul class="pdf-highlights">
+          <li>Como montar um caderno de erros eficiente</li>
+          <li>Ciclo: resolver → analisar → corrigir → revisar</li>
+          <li>Ritmo de questões por semana e por matéria</li>
+          <li>Indicadores de progresso reais</li>
+        </ul>
+        <div class="pdf-actions">
+          <a class="pdf-btn-primary" href="/assets/pdfs/resolucao-estrategica-premium-elite.pdf" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir PDF
+          </a>
+          <a class="pdf-btn-ghost" href="/assets/pdfs/resolucao-estrategica-premium-elite.pdf" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3. Estrutura de Redação -->
+      <div class="pdf-card cat-redacao">
+        <div class="pdf-tag">✍ Redação</div>
+        <h3>Aula de Redação: Mestria na Estrutura</h3>
+        <p>Manual prático de escrita estratégica para a FCC. Estrutura dissertativo-argumentativa dominada em um único guia.</p>
+        <ul class="pdf-highlights">
+          <li>Arquitetura perfeita: intro, desenvolvimento, conclusão</li>
+          <li>Exemplo real mapeado passo a passo (Feminicídio)</li>
+          <li>Modelo coringa adaptável para qualquer tema</li>
+          <li>Mnemônico QUEM + O QUÊ + COMO + PARA QUÊ</li>
+        </ul>
+        <div class="pdf-actions">
+          <a class="pdf-btn-primary" href="/assets/pdfs/estrutura-redacao-premium-elite.pdf" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir PDF
+          </a>
+          <a class="pdf-btn-ghost" href="/assets/pdfs/estrutura-redacao-premium-elite.pdf" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4. TAF -->
+      <div class="pdf-card cat-taf">
+        <div class="pdf-tag">💪 TAF</div>
+        <h3>Preparação Física para o TAF PMBA</h3>
+        <p>Estratégia de condicionamento e performance para mulheres. Cronograma progressivo de 4 semanas adaptado ao edital.</p>
+        <ul class="pdf-highlights">
+          <li>Exigências reais: 50m, barra fixa, 2400m</li>
+          <li>Plano de 4 semanas (adaptação → simulado)</li>
+          <li>Integração com os estudos teóricos</li>
+          <li>Prevenção de lesões e recuperação muscular</li>
+        </ul>
+        <div class="pdf-actions">
+          <a class="pdf-btn-primary" href="/assets/pdfs/preparacao-taf-premium-elite.pdf" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir PDF
+          </a>
+          <a class="pdf-btn-ghost" href="/assets/pdfs/preparacao-taf-premium-elite.pdf" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Plan CTA -->
+    <div class="plan-cta">
+      <div>
+        <h3>Pronta para gerar seu plano de estudos?</h3>
+        <p>Combine os materiais premium com um cronograma Pomodoro personalizado por edital, assunto e suas dificuldades.</p>
+      </div>
+      <a href="/#plano" class="submit-btn">🚀 Gerar meu plano</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <strong>ELITE FEMININA — MISSÃO FARDA</strong>
+    <span>A farda é pesada, mas a honra é maior ainda.</span>
+  </footer>
+
+  <script>
+    // ── Load user info ────────────────────────────────────────
+    async function loadMe() {
+      try {
+        const res = await fetch('/me');
+        if (!res.ok) { window.location.href = '/login'; return; }
+        const user = await res.json();
+
+        const fn = user.name ? user.name.split(' ')[0] : 'Aluna';
+        document.getElementById('greetingName').innerHTML =
+          `Olá, ${fn}! <span>Missão ativa.</span>`;
+
+        if (user.expiresAt) {
+          const d = new Date(user.expiresAt);
+          document.getElementById('accessExpiry').textContent =
+            'Expira ' + d.toLocaleDateString('pt-BR');
+        } else {
+          document.getElementById('accessExpiry').textContent = 'Acesso vitalício';
+        }
+
+        if (user.role === 'admin') {
+          document.getElementById('adminNavLink').removeAttribute('hidden');
+          document.getElementById('adminMobileLink').removeAttribute('hidden');
+        }
+      } catch { window.location.href = '/login'; }
+    }
+
+    // ── Logout ────────────────────────────────────────────────
+    async function logout() {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+
+    // ── Hamburger ─────────────────────────────────────────────
+    const hamburger  = document.getElementById('hamburgerBtn');
+    const mobileNav  = document.getElementById('mobileNav');
+    const overlay    = document.getElementById('mobileOverlay');
+    const closeBtn   = document.getElementById('mobileNavClose');
+
+    function openMenu() {
+      mobileNav.classList.add('open');
+      overlay.classList.add('show');
+      hamburger.setAttribute('aria-expanded', 'true');
+      mobileNav.setAttribute('aria-hidden', 'false');
+    }
+    function closeMenu() {
+      mobileNav.classList.remove('open');
+      overlay.classList.remove('show');
+      hamburger.setAttribute('aria-expanded', 'false');
+      mobileNav.setAttribute('aria-hidden', 'true');
+    }
+
+    hamburger.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    loadMe();
+  </script>
+</body>
+</html>
