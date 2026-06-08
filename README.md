@@ -15,10 +15,10 @@ Versão refinada do gerador de plano de estudos PMBA.
 - Assuntos fáceis entram como manutenção para evitar esquecimento.
 - PDF/impressão mais organizado, com capa, diagnóstico, prioridades e cronograma.
 
-## Como rodar no Windows
+## Como rodar localmente
 
-```powershell
-npm.cmd install
+```sh
+npm install
 node server.js
 ```
 
