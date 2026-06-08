@@ -747,7 +747,7 @@ function perfilDoNivel(nivel = "") {
   if (n.includes("iniciante")) {
     return {
       nome: "Base guiada",
-      dificuldadeExtra: 10,
+      dificuldadeExtra: 5,   // reduzido: gap menor → rotação funciona
       facilidadeReducao: 1,
       teoria: "teoria guiada + exemplos",
       questoes: "questões fundamentais",
@@ -759,8 +759,8 @@ function perfilDoNivel(nivel = "") {
   if (n.includes("avançado")) {
     return {
       nome: "Alta performance",
-      dificuldadeExtra: 16,
-      facilidadeReducao: 4,
+      dificuldadeExtra: 7,   // reduzido
+      facilidadeReducao: 2,
       teoria: "revisão objetiva do ponto-chave",
       questoes: "questões cronometradas",
       revisao: "correção ativa + padrão de erro",
@@ -770,7 +770,7 @@ function perfilDoNivel(nivel = "") {
 
   return {
     nome: "Evolução equilibrada",
-    dificuldadeExtra: 13,
+    dificuldadeExtra: 6,   // reduzido
     facilidadeReducao: 3,
     teoria: "teoria direcionada",
     questoes: "questões comentadas",
@@ -825,11 +825,16 @@ function escolherMateria(materias, state, ctx) {
     const s = state[materia];
     let score = s.score;
 
-    score -= (ctx.weekCounts[materia] || 0) * 3.2;
-    score -= (ctx.globalCounts[materia] || 0) * 0.45;
-    if (ctx.lastMateria === materia) score -= 80;
-    if (ctx.daySet.has(materia) && ctx.daySet.size < Math.min(3, materias.length)) score -= 30;
-    if ((ctx.weekCounts[materia] || 0) === 0) score += 7;
+    // Penalidade progressiva por semana — freio efetivo contra repetição
+    score -= (ctx.weekCounts[materia] || 0) * 5.5;
+    // Penalidade suave por uso total
+    score -= (ctx.globalCounts[materia] || 0) * 0.4;
+    // Bloqueio forte para repetição consecutiva
+    if (ctx.lastMateria === materia) score -= 120;
+    // Penalidade para matéria já selecionada no dia
+    if (ctx.daySet.has(materia)) score -= 60;
+    // Bônus forte se a matéria ainda não apareceu essa semana
+    if ((ctx.weekCounts[materia] || 0) === 0) score += 14;
     score += ((ctx.seed + idx) % 5) * 0.08;
 
     if (score > melhorScore) {
@@ -856,20 +861,10 @@ function limiteMateriasPorDia(horasDia) {
 }
 
 function selecionarMateriasDoDia(materias, state, ctx, limite) {
+  // Seleção puramente pelo score unificado — sem loop de prioridades forçadas.
+  // Matérias difíceis aparecem mais (score base maior), mas as penalidades
+  // por uso semanal garantem revezamento real com as demais disciplinas.
   const escolhidas = [];
-
-  const prioridades = materias.filter((m) => state[m].dificuldade);
-  for (const materia of prioridades) {
-    if (escolhidas.length >= limite) break;
-    const usoSemana = ctx.weekCounts[materia] || 0;
-    const usoGlobal = ctx.globalCounts[materia] || 0;
-    const mediaUso = usoSemana + usoGlobal * 0.18;
-    const menorQueOutras = escolhidas.length === 0 || mediaUso <= 2.5;
-
-    if (menorQueOutras && !escolhidas.includes(materia)) {
-      escolhidas.push(materia);
-    }
-  }
 
   let guard = 0;
   while (escolhidas.length < limite && guard < materias.length * 4) {
@@ -894,19 +889,20 @@ function selecionarMateriasDoDia(materias, state, ctx, limite) {
 }
 
 function distribuirCiclos(ciclos, qtdMaterias, nivel) {
+  // Distribuição equilibrada: leve destaque para a prioritária,
+  // mas todas as matérias do dia têm tempo real de estudo.
   if (qtdMaterias <= 1) return [ciclos];
 
-  const avancado = String(nivel).toLowerCase().includes("avançado");
-  const iniciante = String(nivel).toLowerCase().includes("iniciante");
-
   if (qtdMaterias === 2) {
-    const primeira = Math.max(1, Math.ceil(ciclos * (avancado ? 0.55 : iniciante ? 0.65 : 0.6)));
-    return [primeira, Math.max(1, ciclos - primeira)];
+    // 55% / 45%
+    const a = Math.max(1, Math.round(ciclos * 0.55));
+    return [a, Math.max(1, ciclos - a)];
   }
 
-  const primeira = Math.max(1, Math.ceil(ciclos * (iniciante ? 0.5 : 0.45)));
-  const segunda = Math.max(1, Math.floor(ciclos * (avancado ? 0.35 : 0.33)));
-  return [primeira, segunda, Math.max(1, ciclos - primeira - segunda)];
+  // 3 matérias: 44% / 34% / 22%
+  const a = Math.max(1, Math.round(ciclos * 0.44));
+  const b = Math.max(1, Math.round(ciclos * 0.34));
+  return [a, b, Math.max(1, ciclos - a - b)];
 }
 
 function tarefaPorNivel(perfil, etapa, retaFinal) {
