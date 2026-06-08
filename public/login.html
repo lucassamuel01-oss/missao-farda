@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar — Elite Feminina Missão Farda</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 36px;
+      background: var(--glass, rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .login-brand { text-align:center; margin-bottom:28px; }
+    .login-brand .crest { font-size:2rem; display:block; margin-bottom:6px; }
+    .login-brand strong { font-size:1.2rem; letter-spacing:.08em; }
+    .login-brand small { display:block; font-size:.72rem; letter-spacing:.18em; opacity:.6; }
+    .login-box h1 { font-size:1.3rem; font-weight:700; margin-bottom:24px; }
+    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+    .field label { font-size:.82rem; opacity:.7; letter-spacing:.04em; }
+    .field input {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: inherit;
+      font-size: .95rem;
+      outline: none;
+      transition: border .2s;
+    }
+    .field input:focus { border-color: rgba(255,255,255,0.4); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .06em;
+      margin-top: 8px;
+      transition: opacity .2s;
+    }
+    .login-btn:hover { opacity:.88; }
+    .error-msg {
+      background: rgba(239,68,68,.15);
+      border: 1px solid rgba(239,68,68,.4);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .86rem;
+      margin-bottom: 16px;
+      color: #fca5a5;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <div class="login-brand">
+      <span class="crest">✦</span>
+      <strong>ELITE FEMININA</strong>
+      <small>MISSÃO FARDA</small>
+    </div>
+    <h1>Entrar na plataforma</h1>
+
+    <div id="error-msg" class="error-msg" style="display:none;"></div>
+
+    <form id="login-form">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="seu@email.com" />
+      </div>
+      <div class="field">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+      </div>
+      <button type="submit" class="login-btn">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.disabled = true;
+      btn.textContent = 'Entrando...';
+
+      const body = new URLSearchParams({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+      });
+
+      try {
+        const res = await fetch('/login', { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        const data = await res.json();
+
+        if (data.success) {
+          window.location.href = data.redirect || '/';
+        } else {
+          const errEl = document.getElementById('error-msg');
+          errEl.textContent = data.message || 'Credenciais inválidas.';
+          errEl.style.display = 'block';
+        }
+      } catch {
+        document.getElementById('error-msg').textContent = 'Erro de conexão.';
+        document.getElementById('error-msg').style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -3,24 +3,233 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const session = require("express-session");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const COURSE_URL =
   process.env.COURSE_URL ||
   "https://web.concurseiroelitelp.com.br/cursos-do-elite-parceiros-cris-andrade/";
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
 
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const LEADS_JSON = path.join(DATA_DIR, "leads.json");
 const LEADS_CSV = path.join(DATA_DIR, "leads.csv");
+const USERS_JSON = path.join(DATA_DIR, "users.json");
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
-app.use(express.static(PUBLIC_DIR));
 app.use(bodyParser.json({ limit: "2mb" }));
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, sameSite: "lax", maxAge: 7 * 24 * 60 * 60 * 1000 },
+  })
+);
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+
+function readUsers() {
+  if (!fs.existsSync(USERS_JSON)) return [];
+  try {
+    const raw = fs.readFileSync(USERS_JSON, "utf8").trim();
+    const parsed = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeUsers(users) {
+  ensureDirectories();
+  fs.writeFileSync(USERS_JSON, JSON.stringify(users, null, 2), "utf8");
+}
+
+function isAccessValid(user) {
+  if (!user.active) return false;
+  if (!user.expiresAt) return true;
+  return new Date(user.expiresAt).getTime() >= Date.now();
+}
+
+function seedAdminUser() {
+  const users = readUsers();
+  if (users.some((u) => u.role === "admin")) return;
+  const hash = bcrypt.hashSync("admin123", 10);
+  users.push({
+    id: crypto.randomUUID(),
+    name: "Administrador",
+    email: "admin@elite.com",
+    password: hash,
+    role: "admin",
+    active: true,
+    expiresAt: null,
+    createdAt: new Date().toISOString(),
+  });
+  writeUsers(users);
+  console.log("Admin padrão criado — email: admin@elite.com  senha: admin123");
+}
+
+// ── Auth middleware ───────────────────────────────────────────────────────────
+
+const PUBLIC_PATHS = ["/login", "/logout", "/health"];
+const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf)$/;
+
+function requireAuth(req, res, next) {
+  if (
+    PUBLIC_PATHS.includes(req.path) ||
+    STATIC_EXTENSIONS.test(req.path)
+  ) {
+    return next();
+  }
+
+  if (!req.session.userId) {
+    if (req.accepts("html")) return res.redirect("/login");
+    return res.status(401).json({ success: false, message: "Não autenticado." });
+  }
+
+  const users = readUsers();
+  const user = users.find((u) => u.id === req.session.userId);
+
+  if (!user || !isAccessValid(user)) {
+    req.session.destroy(() => {});
+    if (req.accepts("html")) return res.redirect("/login");
+    return res.status(403).json({ success: false, message: "Acesso expirado ou inativo." });
+  }
+
+  req.currentUser = user;
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.currentUser || req.currentUser.role !== "admin") {
+    if (req.accepts("html")) return res.redirect("/");
+    return res.status(403).json({ success: false, message: "Acesso negado." });
+  }
+  next();
+}
+
+app.use(requireAuth);
+
+// ── Static files (after auth) ─────────────────────────────────────────────────
+app.use(express.static(PUBLIC_DIR));
+
+// ── Auth routes ───────────────────────────────────────────────────────────────
+
+app.get("/login", (req, res) => {
+  if (req.session.userId) return res.redirect("/");
+  res.sendFile(path.join(PUBLIC_DIR, "login.html"));
+});
+
+app.post("/login", (req, res) => {
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "");
+
+  const users = readUsers();
+  const user = users.find((u) => u.email.toLowerCase() === email);
+
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    return res.status(401).json({ success: false, message: "E-mail ou senha incorretos." });
+  }
+
+  if (!isAccessValid(user)) {
+    return res.status(403).json({ success: false, message: "Seu acesso está inativo ou expirado. Entre em contato com o suporte." });
+  }
+
+  req.session.userId = user.id;
+  const redirect = user.role === "admin" ? "/admin" : "/";
+  return res.json({ success: true, redirect });
+});
+
+app.post("/logout", (req, res) => {
+  req.session.destroy(() => {});
+  res.json({ success: true });
+});
+
+// ── Admin API ─────────────────────────────────────────────────────────────────
+
+app.get("/admin", requireAdmin, (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
+});
+
+app.get("/admin/users", requireAdmin, (req, res) => {
+  const users = readUsers().map(({ password: _, ...u }) => u);
+  res.json(users);
+});
+
+app.post("/admin/users", requireAdmin, (req, res) => {
+  const { name, email, password, expiresAt, role } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: "Nome, e-mail e senha são obrigatórios." });
+  }
+  if (String(password).length < 6) {
+    return res.status(400).json({ success: false, message: "Senha mínima de 6 caracteres." });
+  }
+
+  const users = readUsers();
+  if (users.some((u) => u.email.toLowerCase() === String(email).toLowerCase())) {
+    return res.status(400).json({ success: false, message: "E-mail já cadastrado." });
+  }
+
+  const hash = bcrypt.hashSync(String(password), 10);
+  const newUser = {
+    id: crypto.randomUUID(),
+    name: String(name).trim(),
+    email: String(email).trim().toLowerCase(),
+    password: hash,
+    role: role === "admin" ? "admin" : "user",
+    active: true,
+    expiresAt: expiresAt || null,
+    createdAt: new Date().toISOString(),
+  };
+
+  users.push(newUser);
+  writeUsers(users);
+
+  const { password: _, ...safe } = newUser;
+  res.json({ success: true, user: safe });
+});
+
+app.patch("/admin/users/:id", requireAdmin, (req, res) => {
+  const users = readUsers();
+  const idx = users.findIndex((u) => u.id === req.params.id);
+
+  if (idx === -1) {
+    return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+  }
+
+  const allowed = ["active", "expiresAt", "name", "role"];
+  allowed.forEach((field) => {
+    if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+      users[idx][field] = req.body[field];
+    }
+  });
+
+  writeUsers(users);
+  res.json({ success: true });
+});
+
+app.delete("/admin/users/:id", requireAdmin, (req, res) => {
+  if (req.params.id === req.currentUser.id) {
+    return res.status(400).json({ success: false, message: "Você não pode remover a própria conta." });
+  }
+
+  const users = readUsers();
+  const filtered = users.filter((u) => u.id !== req.params.id);
+
+  if (filtered.length === users.length) {
+    return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+  }
+
+  writeUsers(filtered);
+  res.json({ success: true });
+});
 
 const EDITAIS = {
   "SD PMBA": {
@@ -1221,6 +1430,7 @@ app.use((req, res) => {
 });
 
 ensureDirectories();
+seedAdminUser();
 
 app.listen(PORT, () => {
   console.log(`Elite Feminina Missão Farda rodando em http://localhost:${PORT}`);

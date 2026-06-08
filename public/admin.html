@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Elite Feminina Missão Farda</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .admin-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 16px 60px; }
+    .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:12px; }
+    .admin-header h1 { font-size:1.5rem; font-weight:800; margin:0; }
+    .logout-btn {
+      padding: 8px 18px; border-radius:8px; border:1px solid rgba(255,255,255,.2);
+      background:transparent; color:inherit; cursor:pointer; font-size:.85rem;
+      transition: background .2s;
+    }
+    .logout-btn:hover { background:rgba(255,255,255,.08); }
+
+    .card { background:var(--glass,rgba(255,255,255,.06)); border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:28px; margin-bottom:24px; }
+    .card h2 { font-size:1.1rem; font-weight:700; margin:0 0 20px; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .form-row.three { grid-template-columns:1fr 1fr 1fr; }
+    @media(max-width:600px){ .form-row, .form-row.three { grid-template-columns:1fr; } }
+
+    .field { display:flex; flex-direction:column; gap:5px; }
+    .field label { font-size:.78rem; opacity:.65; letter-spacing:.04em; }
+    .field input, .field select {
+      padding:10px 12px; border-radius:9px;
+      border:1px solid rgba(255,255,255,.15);
+      background:rgba(255,255,255,.07); color:inherit;
+      font-size:.9rem; outline:none;
+    }
+    .field input:focus, .field select:focus { border-color:rgba(255,255,255,.4); }
+
+    .btn-primary {
+      padding:11px 22px; border-radius:10px; border:none;
+      background:linear-gradient(135deg,#7c3aed,#a855f7);
+      color:#fff; font-weight:700; cursor:pointer; font-size:.9rem;
+      transition:opacity .2s;
+    }
+    .btn-primary:hover { opacity:.85; }
+
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    thead th { text-align:left; padding:8px 10px; opacity:.55; font-weight:600; font-size:.76rem; letter-spacing:.06em; border-bottom:1px solid rgba(255,255,255,.1); }
+    tbody tr { border-bottom:1px solid rgba(255,255,255,.06); transition:background .15s; }
+    tbody tr:hover { background:rgba(255,255,255,.04); }
+    tbody td { padding:10px 10px; vertical-align:middle; }
+
+    .badge {
+      display:inline-block; padding:3px 9px; border-radius:999px; font-size:.73rem; font-weight:700; letter-spacing:.04em;
+    }
+    .badge-active { background:rgba(34,197,94,.18); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+    .badge-expired { background:rgba(239,68,68,.15); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+    .badge-inactive { background:rgba(148,163,184,.12); color:#94a3b8; border:1px solid rgba(148,163,184,.2); }
+    .badge-admin { background:rgba(168,85,247,.18); color:#c084fc; border:1px solid rgba(168,85,247,.3); }
+
+    .action-btn {
+      padding:5px 12px; border-radius:7px; border:1px solid rgba(255,255,255,.15);
+      background:transparent; color:inherit; cursor:pointer; font-size:.78rem;
+      transition: background .15s;
+    }
+    .action-btn:hover { background:rgba(255,255,255,.08); }
+    .action-btn.danger { border-color:rgba(239,68,68,.4); color:#f87171; }
+    .action-btn.danger:hover { background:rgba(239,68,68,.1); }
+
+    .toast {
+      position:fixed; bottom:24px; right:24px;
+      padding:12px 20px; border-radius:12px; font-size:.9rem; font-weight:600;
+      z-index:999; opacity:0; transform:translateY(8px);
+      transition: opacity .3s, transform .3s;
+      pointer-events:none;
+    }
+    .toast.show { opacity:1; transform:none; }
+    .toast.ok { background:#166534; color:#bbf7d0; border:1px solid #4ade80; }
+    .toast.err { background:#7f1d1d; color:#fecaca; border:1px solid #f87171; }
+
+    .empty-row td { text-align:center; opacity:.45; padding:28px; }
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div>
+        <p style="margin:0 0 4px;font-size:.78rem;opacity:.5;letter-spacing:.1em;">PAINEL ADMIN</p>
+        <h1>✦ Elite Feminina — Gestão de Acessos</h1>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <a href="/" style="font-size:.85rem;opacity:.7;">Ver site</a>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
+    </div>
+
+    <!-- Criar usuário -->
+    <div class="card">
+      <h2>Criar novo acesso</h2>
+      <div class="form-row three">
+        <div class="field">
+          <label>Nome completo</label>
+          <input type="text" id="new-name" placeholder="Maria da Silva" />
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" id="new-email" placeholder="maria@email.com" />
+        </div>
+        <div class="field">
+          <label>Senha inicial</label>
+          <input type="password" id="new-password" placeholder="mínimo 6 caracteres" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Acesso expira em</label>
+          <input type="date" id="new-expires" />
+        </div>
+        <div class="field">
+          <label>Perfil</label>
+          <select id="new-role">
+            <option value="user">Aluna</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="createUser()">Criar acesso</button>
+    </div>
+
+    <!-- Lista de usuários -->
+    <div class="card">
+      <h2>Usuários cadastrados</h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Perfil</th>
+              <th>Status</th>
+              <th>Expira em</th>
+              <th>Criado em</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="users-table">
+            <tr class="empty-row"><td colspan="7">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function showToast(msg, type = 'ok') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => { t.className = 'toast'; }, 3000);
+    }
+
+    async function loadUsers() {
+      const res = await fetch('/admin/users');
+      if (!res.ok) { window.location.href = '/login'; return; }
+      const users = await res.json();
+      const tbody = document.getElementById('users-table');
+
+      if (!users.length) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Nenhum usuário cadastrado.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = users.map(u => {
+        const now = Date.now();
+        const expired = u.expiresAt && new Date(u.expiresAt).getTime() < now;
+        const statusBadge = u.role === 'admin'
+          ? '<span class="badge badge-admin">Admin</span>'
+          : !u.active
+            ? '<span class="badge badge-inactive">Inativo</span>'
+            : expired
+              ? '<span class="badge badge-expired">Expirado</span>'
+              : '<span class="badge badge-active">Ativo</span>';
+
+        const roleBadge = u.role === 'admin'
+          ? '<span class="badge badge-admin">Admin</span>'
+          : '<span class="badge badge-inactive">Aluna</span>';
+
+        const expiresStr = u.expiresAt
+          ? new Date(u.expiresAt).toLocaleDateString('pt-BR')
+          : '<span style="opacity:.4">Sem validade</span>';
+
+        const createdStr = new Date(u.createdAt).toLocaleDateString('pt-BR');
+
+        const toggleLabel = u.active ? 'Desativar' : 'Ativar';
+
+        return `<tr>
+          <td>${escHtml(u.name)}</td>
+          <td>${escHtml(u.email)}</td>
+          <td>${roleBadge}</td>
+          <td>${statusBadge}</td>
+          <td>${expiresStr}</td>
+          <td>${createdStr}</td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="action-btn" onclick="toggleUser('${u.id}', ${u.active})">${toggleLabel}</button>
+            <button class="action-btn" onclick="extendUser('${u.id}')">Prazo</button>
+            <button class="action-btn danger" onclick="deleteUser('${u.id}', '${escHtml(u.name)}')">Remover</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function escHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    }
+
+    async function createUser() {
+      const name = document.getElementById('new-name').value.trim();
+      const email = document.getElementById('new-email').value.trim();
+      const password = document.getElementById('new-password').value;
+      const expiresAt = document.getElementById('new-expires').value;
+      const role = document.getElementById('new-role').value;
+
+      if (!name || !email || !password) { showToast('Preencha nome, e-mail e senha.', 'err'); return; }
+      if (password.length < 6) { showToast('Senha mínima de 6 caracteres.', 'err'); return; }
+
+      const res = await fetch('/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, expiresAt: expiresAt || null, role }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showToast('Acesso criado com sucesso!');
+        document.getElementById('new-name').value = '';
+        document.getElementById('new-email').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('new-expires').value = '';
+        loadUsers();
+      } else {
+        showToast(data.message || 'Erro ao criar usuário.', 'err');
+      }
+    }
+
+    async function toggleUser(id, currentActive) {
+      const res = await fetch(`/admin/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ active: !currentActive }),
+      });
+      const data = await res.json();
+      if (data.success) { showToast('Usuário atualizado.'); loadUsers(); }
+      else showToast(data.message || 'Erro.', 'err');
+    }
+
+    async function extendUser(id) {
+      const date = prompt('Nova data de expiração (AAAA-MM-DD), ou deixe vazio para sem validade:');
+      if (date === null) return;
+      const res = await fetch(`/admin/users/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ expiresAt: date || null }),
+      });
+      const data = await res.json();
+      if (data.success) { showToast('Prazo atualizado.'); loadUsers(); }
+      else showToast(data.message || 'Erro.', 'err');
+    }
+
+    async function deleteUser(id, name) {
+      if (!confirm(`Remover o acesso de "${name}"? Esta ação não pode ser desfeita.`)) return;
+      const res = await fetch(`/admin/users/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { showToast('Usuário removido.'); loadUsers(); }
+      else showToast(data.message || 'Erro.', 'err');
+    }
+
+    async function logout() {
+      await fetch('/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

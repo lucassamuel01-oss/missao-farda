@@ -23,8 +23,11 @@
   "author": "Elite Feminina",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "body-parser": "^1.20.5",
-    "express": "^4.22.2"
+    "connect-flash": "^0.1.1",
+    "express": "^4.22.2",
+    "express-session": "^1.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
