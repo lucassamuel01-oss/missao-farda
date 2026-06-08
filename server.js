@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const COURSE_URL =
   process.env.COURSE_URL ||
-  "https://web.concurseiroelitelp.com.br/cursos-do-elite-parceiros-cris-andrade/";
+  "https://pay.cakto.com.br/33krayz?affiliate=s7XUk8bn";
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const LEADS_JSON = path.join(DATA_DIR, "leads.json");
@@ -91,7 +91,7 @@ function seedAdminUser() {
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
 
-const PUBLIC_PATHS = ["/login", "/logout", "/health"];
+const PUBLIC_PATHS = ["/login", "/logout", "/health", "/curso"];
 const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf)$/;
 
 function requireAuth(req, res, next) {
@@ -1350,7 +1350,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/curso", (req, res) => {
-  res.send(renderCursoPage());
+  res.redirect(302, COURSE_URL);
 });
 
 app.get("/health", (req, res) => {

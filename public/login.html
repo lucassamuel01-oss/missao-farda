@@ -3,37 +3,258 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entrar — Elite Feminina Missão Farda</title>
+  <title>Entrar - Elite Feminina Missão Farda</title>
   <link rel="stylesheet" href="/styles.css" />
   <style>
-    body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+
+    .login-shell {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) 420px;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .product-panel {
+      min-height: 620px;
+      padding: 42px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(90deg, rgba(5, 7, 6, .92), rgba(5, 7, 6, .72) 52%, rgba(5, 7, 6, .34)),
+        url('/assets/hero-2.jpeg') center right / cover;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .product-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 44%;
+      background: linear-gradient(0deg, rgba(5, 7, 6, .88), transparent);
+      pointer-events: none;
+    }
+
+    .product-content,
+    .product-footer {
+      position: relative;
+      z-index: 1;
+      max-width: 650px;
+    }
+
+    .login-brand-inline {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 46px;
+      color: var(--gold-2);
+    }
+
+    .login-brand-inline strong {
+      display: block;
+      font-family: Georgia, serif;
+      color: var(--gold-3);
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    .login-brand-inline small {
+      display: block;
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .product-kicker {
+      width: max-content;
+      margin-bottom: 14px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: #17110a;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
+    .product-panel h1 {
+      max-width: 720px;
+      margin: 0 0 16px;
+      font-family: Georgia, serif;
+      font-size: clamp(38px, 5vw, 66px);
+      line-height: .98;
+      color: var(--gold-3);
+    }
+
+    .product-panel h1 span {
+      color: var(--gold);
+    }
+
+    .product-copy {
+      max-width: 610px;
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .product-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .product-points div {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(8, 10, 9, .62);
+      backdrop-filter: blur(10px);
+    }
+
+    .product-points b {
+      display: block;
+      color: var(--gold-3);
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .product-points span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .coupon-box {
+      padding: 14px 16px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 14px;
+      background: rgba(217, 168, 78, .09);
+    }
+
+    .coupon-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .9px;
+    }
+
+    .coupon-box strong {
+      display: block;
+      color: var(--gold-3);
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .course-link {
+      min-height: 48px;
+      padding: 13px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      color: #16110a;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      text-decoration: none;
+      font-weight: 900;
+      white-space: nowrap;
+      transition: opacity .2s, transform .2s;
+    }
+
+    .course-link:hover {
+      opacity: .9;
+      transform: translateY(-1px);
+    }
+
     .login-box {
       width: 100%;
-      max-width: 420px;
       padding: 40px 36px;
-      background: var(--glass, rgba(255,255,255,0.06));
-      border: 1px solid rgba(255,255,255,0.12);
+      background: var(--glass, rgba(255, 255, 255, 0.06));
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
       backdrop-filter: blur(12px);
+      align-self: center;
     }
-    .login-brand { text-align:center; margin-bottom:28px; }
-    .login-brand .crest { font-size:2rem; display:block; margin-bottom:6px; }
-    .login-brand strong { font-size:1.2rem; letter-spacing:.08em; }
-    .login-brand small { display:block; font-size:.72rem; letter-spacing:.18em; opacity:.6; }
-    .login-box h1 { font-size:1.3rem; font-weight:700; margin-bottom:24px; }
-    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-    .field label { font-size:.82rem; opacity:.7; letter-spacing:.04em; }
+
+    .login-brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-brand .crest {
+      font-size: 2rem;
+      display: block;
+      margin: 0 auto 6px;
+    }
+
+    .login-brand strong {
+      font-size: 1.2rem;
+      letter-spacing: .08em;
+    }
+
+    .login-brand small {
+      display: block;
+      font-size: .72rem;
+      letter-spacing: .18em;
+      opacity: .6;
+    }
+
+    .login-box h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-size: .82rem;
+      opacity: .7;
+      letter-spacing: .04em;
+    }
+
     .field input {
       padding: 12px 14px;
       border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.07);
       color: inherit;
       font-size: .95rem;
       outline: none;
       transition: border .2s;
     }
-    .field input:focus { border-color: rgba(255,255,255,0.4); }
+
+    .field input:focus {
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
     .login-btn {
       width: 100%;
       padding: 14px;
@@ -48,41 +269,127 @@
       margin-top: 8px;
       transition: opacity .2s;
     }
-    .login-btn:hover { opacity:.88; }
+
+    .login-btn:hover {
+      opacity: .88;
+    }
+
     .error-msg {
-      background: rgba(239,68,68,.15);
-      border: 1px solid rgba(239,68,68,.4);
+      background: rgba(239, 68, 68, .15);
+      border: 1px solid rgba(239, 68, 68, .4);
       border-radius: 10px;
       padding: 10px 14px;
       font-size: .86rem;
       margin-bottom: 16px;
       color: #fca5a5;
     }
+
+    .login-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.55;
+      text-align: center;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        padding: 18px;
+      }
+
+      .login-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .product-panel {
+        min-height: auto;
+        padding: 28px;
+      }
+
+      .product-points {
+        grid-template-columns: 1fr;
+      }
+
+      .product-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .course-link {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <div class="login-brand">
-      <span class="crest">✦</span>
-      <strong>ELITE FEMININA</strong>
-      <small>MISSÃO FARDA</small>
-    </div>
-    <h1>Entrar na plataforma</h1>
+  <main class="login-shell">
+    <section class="product-panel" aria-labelledby="product-title">
+      <div class="product-content">
+        <div class="login-brand-inline">
+          <span class="crest">✦</span>
+          <span>
+            <strong>ELITE FEMININA</strong>
+            <small>MISSÃO FARDA</small>
+          </span>
+        </div>
 
-    <div id="error-msg" class="error-msg" style="display:none;"></div>
+        <p class="product-kicker">Preparatório PMBA</p>
+        <h1 id="product-title">Manual do <span>Mike</span></h1>
+        <p class="product-copy">
+          Uma preparação direcionada para PMBA com estratégia de edital, plano de execução,
+          resolução de questões, redação, rotina de revisão e orientação para o TAF.
+        </p>
 
-    <form id="login-form">
-      <div class="field">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" required autocomplete="email" placeholder="seu@email.com" />
+        <div class="product-points" aria-label="Destaques do produto">
+          <div>
+            <b>Plano de estudo</b>
+            <span>Cronograma com foco em constância, prioridade e execução semanal.</span>
+          </div>
+          <div>
+            <b>Redação e questões</b>
+            <span>Treino orientado para transformar erro em revisão inteligente.</span>
+          </div>
+          <div>
+            <b>TAF e fases</b>
+            <span>Preparação além da prova objetiva, com visão de aprovação completa.</span>
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+
+      <div class="product-footer">
+        <div class="coupon-box">
+          <span>Cupom de desconto</span>
+          <strong>Cris15</strong>
+        </div>
+        <a class="course-link" href="/curso" target="_blank" rel="noopener">Conhecer o curso</a>
       </div>
-      <button type="submit" class="login-btn">Entrar</button>
-    </form>
-  </div>
+    </section>
+
+    <section class="login-box" aria-labelledby="login-title">
+      <div class="login-brand">
+        <span class="crest">✦</span>
+        <strong>ELITE FEMININA</strong>
+        <small>MISSÃO FARDA</small>
+      </div>
+      <h1 id="login-title">Entrar na plataforma</h1>
+
+      <div id="error-msg" class="error-msg" style="display:none;"></div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="seu@email.com" />
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="login-btn">Entrar</button>
+      </form>
+
+      <p class="login-note">Acesso exclusivo para alunas com cadastro ativo.</p>
+    </section>
+  </main>
 
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
