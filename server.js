@@ -11,22 +11,36 @@ const PORT = process.env.PORT || 3000;
 const COURSE_URL =
   process.env.COURSE_URL ||
   "https://web.concurseiroelitelp.com.br/cursos-do-elite-parceiros-cris-andrade/";
-const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString("hex");
-
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const LEADS_JSON = path.join(DATA_DIR, "leads.json");
 const LEADS_CSV = path.join(DATA_DIR, "leads.csv");
 const USERS_JSON = path.join(DATA_DIR, "users.json");
+const SESSION_SECRET_FILE = path.join(DATA_DIR, "session-secret.txt");
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
+
+function getSessionSecret() {
+  if (process.env.SESSION_SECRET) return process.env.SESSION_SECRET;
+
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+
+  if (fs.existsSync(SESSION_SECRET_FILE)) {
+    const storedSecret = fs.readFileSync(SESSION_SECRET_FILE, "utf8").trim();
+    if (storedSecret) return storedSecret;
+  }
+
+  const generatedSecret = crypto.randomBytes(32).toString("hex");
+  fs.writeFileSync(SESSION_SECRET_FILE, generatedSecret, "utf8");
+  return generatedSecret;
+}
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(
   session({
-    secret: SESSION_SECRET,
+    secret: getSessionSecret(),
     resave: false,
     saveUninitialized: false,
     cookie: { httpOnly: true, sameSite: "lax", maxAge: 7 * 24 * 60 * 60 * 1000 },
@@ -117,7 +131,16 @@ function requireAdmin(req, res, next) {
 app.use(requireAuth);
 
 // ── Static files (after auth) ─────────────────────────────────────────────────
-app.use(express.static(PUBLIC_DIR));
+app.use(
+  express.static(PUBLIC_DIR, {
+    setHeaders(res, filePath) {
+      if (filePath.toLowerCase().endsWith(".pdf")) {
+        res.setHeader("X-Robots-Tag", "noindex, nofollow");
+        res.setHeader("Cache-Control", "private, max-age=3600");
+      }
+    },
+  })
+);
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
@@ -152,6 +175,17 @@ app.post("/logout", (req, res) => {
 });
 
 // ── Admin API ─────────────────────────────────────────────────────────────────
+
+app.get("/me", (req, res) => {
+  const user = req.currentUser;
+  res.json({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    expiresAt: user.expiresAt,
+  });
+});
 
 app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "admin.html"));

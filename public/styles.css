@@ -223,6 +223,29 @@ nav a:hover::after{
   width:100%;
 }
 
+.logout-link{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px 12px;
+  cursor:pointer;
+
+  color:var(--text);
+  background:rgba(255,255,255,.04);
+
+  font-size:13px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+
+  transition:var(--transition);
+}
+
+.logout-link:hover{
+  color:var(--gold-3);
+  border-color:var(--line-strong);
+  background:rgba(217,168,78,.08);
+}
+
 /* =========================
    BUTTONS
 ========================= */
@@ -747,6 +770,7 @@ textarea{
 ========================= */
 
 .method-section,
+.materials-section,
 .tips-section{
   padding:0 40px 32px;
 }
@@ -798,6 +822,71 @@ textarea{
 .method-card span{
   color:var(--muted);
   line-height:1.65;
+}
+
+.materials-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.material-card{
+  min-height:260px;
+  padding:22px;
+
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.material-card span{
+  width:max-content;
+  padding:6px 10px;
+  border-radius:999px;
+
+  color:#17110a;
+  background:linear-gradient(135deg,var(--gold-3),var(--gold));
+
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.6px;
+}
+
+.material-card h3{
+  margin:0;
+  font-size:22px;
+  font-family:Georgia,serif;
+  color:var(--gold-3);
+}
+
+.material-card p{
+  flex:1;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.material-card a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  padding:10px 14px;
+
+  border:1px solid var(--line);
+  border-radius:10px;
+
+  color:var(--gold-3);
+  text-decoration:none;
+  font-weight:900;
+
+  background:rgba(217,168,78,.06);
+  transition:var(--transition);
+}
+
+.material-card a:hover{
+  transform:translateY(-2px);
+  border-color:var(--line-strong);
+  background:rgba(217,168,78,.12);
 }
 
 .how{
@@ -1395,6 +1484,7 @@ details p{
   }
 
   .method-grid,
+  .materials-grid,
   .tips-grid,
   .steps,
   .subject-list,
@@ -1433,6 +1523,7 @@ details p{
 
   .hero,
   .method-section,
+  .materials-section,
   .tips-section,
   .result-wrap,
   .course-page{

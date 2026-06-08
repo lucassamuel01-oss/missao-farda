@@ -36,6 +36,8 @@ const mode = document.getElementById("mode");
 const dailyModel = document.getElementById("dailyModel");
 const formStatus = document.getElementById("formStatus");
 const planResult = document.getElementById("planResult");
+const adminLink = document.getElementById("adminLink");
+const logoutBtn = document.getElementById("logoutBtn");
 
 const telefone =
   document.getElementById("telefone") ||
@@ -199,6 +201,28 @@ function salvarLeadSemBloquear(formElement) {
   return false;
 }
 
+async function carregarUsuarioAtual() {
+  try {
+    const res = await fetch("/me", { headers: { Accept: "application/json" } });
+    if (!res.ok) return;
+
+    const user = await res.json();
+    if (adminLink && user.role === "admin") {
+      adminLink.hidden = false;
+    }
+  } catch (error) {
+    console.error("Falha ao carregar usuário:", error);
+  }
+}
+
+async function sair() {
+  try {
+    await fetch("/logout", { method: "POST" });
+  } finally {
+    window.location.href = "/login";
+  }
+}
+
 switchButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     concurso.value = btn.dataset.concurso;
@@ -261,3 +285,8 @@ if (form) {
 preencherMaterias();
 atualizarPreview();
 atualizarResumoLocal();
+carregarUsuarioAtual();
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", sair);
+}
