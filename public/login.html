@@ -3,199 +3,214 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entrar - Elite Feminina Missão Farda</title>
+  <title>Entrar — Elite Feminina Missão Farda</title>
   <link rel="stylesheet" href="/styles.css" />
   <style>
     body {
       min-height: 100vh;
       display: grid;
       place-items: center;
-      padding: 32px;
+      padding: 28px 20px;
     }
 
     .login-shell {
-      width: min(1120px, 100%);
+      width: min(1100px, 100%);
       display: grid;
-      grid-template-columns: minmax(0, 1.12fr) 420px;
-      gap: 22px;
+      grid-template-columns: minmax(0, 1.15fr) 400px;
+      gap: 20px;
       align-items: stretch;
     }
 
+    /* ── Product panel (left) ─────────────────── */
     .product-panel {
-      min-height: 620px;
-      padding: 42px;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      background:
-        linear-gradient(90deg, rgba(5, 7, 6, .92), rgba(5, 7, 6, .72) 52%, rgba(5, 7, 6, .34)),
-        url('/assets/hero-2.jpeg') center right / cover;
+      padding: 44px 48px;
+      min-height: 600px;
       border: 1px solid var(--line);
       border-radius: 24px;
       box-shadow: var(--shadow-lg);
+      background:
+        linear-gradient(100deg, rgba(5,7,6,.96) 0%, rgba(5,7,6,.78) 52%, rgba(5,7,6,.38) 100%),
+        url('/assets/hero-2.jpeg') center right / cover;
     }
 
     .product-panel::after {
       content: "";
       position: absolute;
       inset: auto 0 0;
-      height: 44%;
-      background: linear-gradient(0deg, rgba(5, 7, 6, .88), transparent);
+      height: 40%;
+      background: linear-gradient(0deg, rgba(5,7,6,.9), transparent);
       pointer-events: none;
     }
 
-    .product-content,
-    .product-footer {
+    .product-top,
+    .product-bottom {
       position: relative;
       z-index: 1;
-      max-width: 650px;
     }
 
-    .login-brand-inline {
+    /* brand */
+    .pp-brand {
       display: flex;
       align-items: center;
       gap: 14px;
-      margin-bottom: 46px;
-      color: var(--gold-2);
+      margin-bottom: 44px;
     }
 
-    .login-brand-inline strong {
+    .pp-brand .crest {
+      width: 46px; height: 46px;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .pp-brand strong {
       display: block;
       font-family: Georgia, serif;
-      color: var(--gold-3);
-      font-size: 22px;
+      font-size: 20px;
       letter-spacing: 2px;
+      color: var(--gold-3);
     }
 
-    .login-brand-inline small {
+    .pp-brand small {
       display: block;
-      color: var(--gold);
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 4px;
       text-transform: uppercase;
+      color: var(--gold);
     }
 
-    .product-kicker {
-      width: max-content;
-      margin-bottom: 14px;
-      padding: 7px 11px;
+    /* kicker */
+    .pp-kicker {
+      display: inline-block;
+      padding: 6px 12px;
       border-radius: 999px;
-      color: #17110a;
       background: linear-gradient(135deg, var(--gold-3), var(--gold));
-      font-size: 12px;
+      color: #16110a;
+      font-size: 11px;
       font-weight: 900;
       letter-spacing: .8px;
       text-transform: uppercase;
+      margin-bottom: 16px;
     }
 
     .product-panel h1 {
-      max-width: 720px;
-      margin: 0 0 16px;
       font-family: Georgia, serif;
-      font-size: clamp(38px, 5vw, 66px);
-      line-height: .98;
+      font-size: clamp(32px, 4vw, 54px);
+      line-height: .97;
       color: var(--gold-3);
+      margin: 0 0 18px;
+      max-width: 560px;
     }
 
     .product-panel h1 span {
-      color: var(--gold);
+      color: white;
+      font-style: italic;
+      font-weight: 400;
     }
 
-    .product-copy {
-      max-width: 610px;
-      color: var(--text);
-      font-size: 18px;
-      line-height: 1.65;
+    .pp-copy {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #ddd5c9;
+      max-width: 560px;
+      margin-bottom: 28px;
     }
 
-    .product-points {
+    /* feature grid */
+    .pp-features {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 34px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 580px;
     }
 
-    .product-points div {
-      padding: 14px;
+    .pp-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 14px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(8, 10, 9, .62);
-      backdrop-filter: blur(10px);
+      border-radius: 13px;
+      background: rgba(8,10,9,.6);
+      backdrop-filter: blur(8px);
     }
 
-    .product-points b {
+    .pp-feature-icon {
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pp-feature b {
       display: block;
-      color: var(--gold-3);
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    .product-points span {
-      color: var(--muted);
       font-size: 13px;
-      line-height: 1.45;
+      color: var(--gold-3);
+      margin-bottom: 3px;
     }
 
-    .product-footer {
+    .pp-feature span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* bottom footer */
+    .pp-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      margin-top: 34px;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-top: 28px;
+      margin-top: 28px;
+      border-top: 1px solid var(--line);
     }
 
-    .coupon-box {
-      padding: 14px 16px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 14px;
-      background: rgba(217, 168, 78, .09);
+    .pp-concursos {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .coupon-box span {
-      display: block;
-      color: var(--muted);
+    .pp-tag {
+      padding: 6px 12px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
       font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .9px;
+      font-weight: 800;
+      color: var(--gold-2);
+      background: rgba(217,168,78,.08);
+      letter-spacing: .5px;
     }
 
-    .coupon-box strong {
+    .pp-guarantee {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .pp-guarantee strong {
       display: block;
       color: var(--gold-3);
-      font-size: 24px;
-      letter-spacing: 1px;
+      font-size: 13px;
     }
 
-    .course-link {
-      min-height: 48px;
-      padding: 13px 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      color: #16110a;
-      background: linear-gradient(135deg, var(--gold-3), var(--gold));
-      text-decoration: none;
-      font-weight: 900;
-      white-space: nowrap;
-      transition: opacity .2s, transform .2s;
-    }
-
-    .course-link:hover {
-      opacity: .9;
-      transform: translateY(-1px);
-    }
-
+    /* ── Login box (right) ───────────────────── */
     .login-box {
+      align-self: center;
       width: 100%;
-      padding: 40px 36px;
-      background: var(--glass, rgba(255, 255, 255, 0.06));
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 38px 34px;
+      background: linear-gradient(145deg, rgba(18,22,20,.92), rgba(10,12,11,.96));
+      border: 1px solid var(--line);
       border-radius: 24px;
       backdrop-filter: blur(12px);
-      align-self: center;
+      box-shadow: var(--shadow-lg);
     }
 
     .login-brand {
@@ -204,56 +219,63 @@
     }
 
     .login-brand .crest {
-      font-size: 2rem;
+      font-size: 1.8rem;
       display: block;
-      margin: 0 auto 6px;
+      margin: 0 auto 8px;
     }
 
     .login-brand strong {
-      font-size: 1.2rem;
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 1.15rem;
       letter-spacing: .08em;
+      color: var(--gold-3);
     }
 
     .login-brand small {
       display: block;
-      font-size: .72rem;
-      letter-spacing: .18em;
-      opacity: .6;
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: .8;
     }
 
-    .login-box h1 {
-      font-size: 1.3rem;
+    .login-box h2 {
+      font-size: 1.25rem;
       font-weight: 700;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
+      color: var(--text);
     }
 
     .field {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
 
     .field label {
-      font-size: .82rem;
-      opacity: .7;
-      letter-spacing: .04em;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     .field input {
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(255, 255, 255, 0.07);
-      color: inherit;
+      padding: 13px 14px;
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
       font-size: .95rem;
       outline: none;
-      transition: border .2s;
+      transition: var(--transition);
     }
 
-    .field input:focus {
-      border-color: rgba(255, 255, 255, 0.4);
-    }
+    .field input:hover { border-color: rgba(217,168,78,.3); }
+    .field input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(217,168,78,.12); }
 
     .login-btn {
       width: 100%;
@@ -263,39 +285,59 @@
       background: linear-gradient(135deg, var(--gold-3), var(--gold));
       color: #16110a;
       font-size: 1rem;
-      font-weight: 700;
+      font-weight: 900;
       cursor: pointer;
       letter-spacing: .06em;
-      margin-top: 8px;
-      transition: opacity .2s;
+      margin-top: 6px;
+      font-family: Georgia, serif;
+      transition: var(--transition);
+      box-shadow: 0 8px 24px rgba(217,168,78,.24);
     }
 
     .login-btn:hover {
-      opacity: .88;
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(217,168,78,.3);
+    }
+
+    .login-btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .error-msg {
-      background: rgba(239, 68, 68, .15);
-      border: 1px solid rgba(239, 68, 68, .4);
+      background: rgba(239,68,68,.12);
+      border: 1px solid rgba(239,68,68,.35);
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 11px 14px;
       font-size: .86rem;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       color: #fca5a5;
+      display: none;
     }
 
     .login-note {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: .84rem;
-      line-height: 1.55;
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line-soft);
       text-align: center;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.55;
     }
 
+    .login-note a {
+      color: var(--gold-2);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .login-note a:hover { color: var(--gold-3); }
+
+    /* ── Responsive ─────────────────────────── */
     @media (max-width: 960px) {
-      body {
-        padding: 18px;
-      }
+      body { padding: 18px 16px; }
 
       .login-shell {
         grid-template-columns: 1fr;
@@ -303,77 +345,114 @@
 
       .product-panel {
         min-height: auto;
-        padding: 28px;
+        padding: 32px 28px;
       }
 
-      .product-points {
-        grid-template-columns: 1fr;
+      .pp-features {
+        grid-template-columns: 1fr 1fr;
       }
 
-      .product-footer {
+      .pp-bottom {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
       }
 
-      .course-link {
-        width: 100%;
-      }
+      .pp-guarantee { text-align: left; }
+    }
+
+    @media (max-width: 540px) {
+      .pp-features { grid-template-columns: 1fr; }
+
+      .product-panel { padding: 26px 22px; }
+
+      .login-box { padding: 28px 22px; }
     }
   </style>
 </head>
 <body>
   <main class="login-shell">
-    <section class="product-panel" aria-labelledby="product-title">
-      <div class="product-content">
-        <div class="login-brand-inline">
+
+    <!-- ── Left: site description ─────────────────────────── -->
+    <section class="product-panel">
+      <div class="product-top">
+        <div class="pp-brand">
           <span class="crest">✦</span>
           <span>
             <strong>ELITE FEMININA</strong>
-            <small>MISSÃO FARDA</small>
+            <small>Missão Farda</small>
           </span>
         </div>
 
-        <p class="product-kicker">Preparatório PMBA</p>
-        <h1 id="product-title">Manual do <span>Mike</span></h1>
-        <p class="product-copy">
-          Uma preparação direcionada para PMBA com estratégia de edital, plano de execução,
-          resolução de questões, redação, rotina de revisão e orientação para o TAF.
+        <div class="pp-kicker">Plataforma Premium de Preparação</div>
+
+        <h1>A preparação inteligente para a sua <span>aprovação</span></h1>
+
+        <p class="pp-copy">
+          Aqui você encontra tudo o que precisa para chegar à prova com estratégia, foco e
+          constância. Um sistema completo criado especialmente para mulheres que querem a farda —
+          com plano personalizado, materiais premium e acompanhamento por edital.
         </p>
 
-        <div class="product-points" aria-label="Destaques do produto">
-          <div>
-            <b>Plano de estudo</b>
-            <span>Cronograma com foco em constância, prioridade e execução semanal.</span>
+        <div class="pp-features">
+          <div class="pp-feature">
+            <span class="pp-feature-icon">🎯</span>
+            <div>
+              <b>Plano de Estudos Personalizado</b>
+              <span>Cronograma Pomodoro gerado por edital, assunto e suas dificuldades reais</span>
+            </div>
           </div>
-          <div>
-            <b>Redação e questões</b>
-            <span>Treino orientado para transformar erro em revisão inteligente.</span>
+          <div class="pp-feature">
+            <span class="pp-feature-icon">📄</span>
+            <div>
+              <b>Materiais PDF Exclusivos</b>
+              <span>Código da Aprovação, Resolução Estratégica, Redação e Preparo TAF</span>
+            </div>
           </div>
-          <div>
-            <b>TAF e fases</b>
-            <span>Preparação além da prova objetiva, com visão de aprovação completa.</span>
+          <div class="pp-feature">
+            <span class="pp-feature-icon">⚖️</span>
+            <div>
+              <b>Engenharia Reversa da Banca</b>
+              <span>Padrões reais de cobrança da FCC mapeados por disciplina jurídica</span>
+            </div>
+          </div>
+          <div class="pp-feature">
+            <span class="pp-feature-icon">💪</span>
+            <div>
+              <b>TAF + Teoria na mesma rotina</b>
+              <span>Cronograma de condicionamento físico integrado ao plano de estudos</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="product-footer">
-        <div class="coupon-box">
-          <span>Cupom de desconto</span>
-          <strong>Cris15</strong>
+      <div class="product-bottom">
+        <div class="pp-bottom">
+          <div>
+            <p style="font-size:11px;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;">Concursos cobertos</p>
+            <div class="pp-concursos">
+              <span class="pp-tag">SD PMBA</span>
+              <span class="pp-tag">CFO PMBA</span>
+            </div>
+          </div>
+          <div class="pp-guarantee">
+            <strong>Banca FCC</strong>
+            Estratégia focada nos padrões<br>reais de cobrança da banca
+          </div>
         </div>
-        <a class="course-link" href="/curso" target="_blank" rel="noopener">Conhecer o curso</a>
       </div>
     </section>
 
-    <section class="login-box" aria-labelledby="login-title">
+    <!-- ── Right: login form ──────────────────────────────── -->
+    <div class="login-box">
       <div class="login-brand">
         <span class="crest">✦</span>
         <strong>ELITE FEMININA</strong>
-        <small>MISSÃO FARDA</small>
+        <small>Missão Farda</small>
       </div>
-      <h1 id="login-title">Entrar na plataforma</h1>
 
-      <div id="error-msg" class="error-msg" style="display:none;"></div>
+      <h2>Acesse sua conta</h2>
+
+      <div class="error-msg" id="error-msg"></div>
 
       <form id="login-form">
         <div class="field">
@@ -384,42 +463,50 @@
           <label for="password">Senha</label>
           <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
         </div>
-        <button type="submit" class="login-btn">Entrar</button>
+        <button type="submit" class="login-btn" id="loginBtn">Entrar na plataforma</button>
       </form>
 
-      <p class="login-note">Acesso exclusivo para alunas com cadastro ativo.</p>
-    </section>
+      <div class="login-note">
+        Ainda não tem acesso?<br>
+        <a href="/curso" target="_blank" rel="noopener">Conheça o Preparatório PMBA — Manual do Mike →</a>
+      </div>
+    </div>
+
   </main>
 
   <script>
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = e.target.querySelector('button');
-      btn.disabled = true;
-      btn.textContent = 'Entrando...';
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('error-msg');
 
-      const body = new URLSearchParams({
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-      });
+      btn.disabled = true;
+      btn.textContent = 'Entrando…';
+      errEl.style.display = 'none';
 
       try {
-        const res = await fetch('/login', { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          }),
+        });
         const data = await res.json();
 
         if (data.success) {
           window.location.href = data.redirect || '/';
         } else {
-          const errEl = document.getElementById('error-msg');
           errEl.textContent = data.message || 'Credenciais inválidas.';
           errEl.style.display = 'block';
         }
       } catch {
-        document.getElementById('error-msg').textContent = 'Erro de conexão.';
-        document.getElementById('error-msg').style.display = 'block';
+        errEl.textContent = 'Erro de conexão. Tente novamente.';
+        errEl.style.display = 'block';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Entrar';
+        btn.textContent = 'Entrar na plataforma';
       }
     });
   </script>
