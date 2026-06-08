@@ -1159,47 +1159,551 @@ function renderTopbar(activePage = "") {
   </script>`;
 }
 
+const MIKE_URL = "https://pay.cakto.com.br/33krayz?affiliate=s7XUk8bn";
+const MIKE_COUPON = "Cris15";
+
 function renderCursoPage() {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Curso Completo — Elite Feminina Missão Farda</title>
+  <title>Preparatório PMBA — Manual do Mike · Elite Feminina</title>
   <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .mike-page { padding: 0 0 60px; }
+
+    /* ── Hero ──────────────────── */
+    .mike-hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      padding: 60px 40px;
+      background:
+        linear-gradient(100deg, rgba(5,7,6,.97) 0%, rgba(5,7,6,.82) 55%, rgba(5,7,6,.44) 100%),
+        url('/assets/hero-1.jpeg') center right / cover;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mike-hero-content { max-width: 640px; position: relative; z-index: 1; }
+
+    .mike-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      color: #16110a;
+      font-size: 11.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .mike-hero h1 {
+      font-family: Georgia, serif;
+      font-size: clamp(36px, 5vw, 68px);
+      line-height: .95;
+      color: var(--gold-3);
+      margin: 0 0 10px;
+    }
+
+    .mike-hero h1 span {
+      display: block;
+      color: white;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .mike-sub {
+      font-size: 18px;
+      color: #ddd5c9;
+      line-height: 1.65;
+      margin: 14px 0 32px;
+      max-width: 560px;
+    }
+
+    .mike-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .mike-buy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 28px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      color: #16110a;
+      font-family: Georgia, serif;
+      font-size: 18px;
+      font-weight: 900;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(217,168,78,.3);
+      transition: var(--transition);
+    }
+
+    .mike-buy-btn:hover {
+      filter: brightness(1.07);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 38px rgba(217,168,78,.38);
+    }
+
+    .coupon-inline {
+      display: flex;
+      flex-direction: column;
+      padding: 12px 16px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      background: rgba(217,168,78,.07);
+    }
+
+    .coupon-inline small {
+      font-size: 10px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .coupon-inline strong {
+      font-size: 22px;
+      color: var(--gold-3);
+      letter-spacing: 2px;
+      font-family: Georgia, serif;
+    }
+
+    .coupon-inline span {
+      font-size: 11px;
+      color: var(--gold);
+      margin-top: 1px;
+    }
+
+    /* ── Content wrap ──────────────────── */
+    .mike-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── About section ─────────────────── */
+    .mike-about {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 32px;
+      align-items: start;
+      padding: 54px 0 40px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .mike-about-text .eyebrow { margin-bottom: 10px; }
+
+    .mike-about-text h2 {
+      font-family: Georgia, serif;
+      font-size: clamp(26px, 3vw, 38px);
+      color: var(--gold-3);
+      margin: 0 0 16px;
+      line-height: 1.1;
+    }
+
+    .mike-about-text p {
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    .mike-highlight-box {
+      padding: 22px 24px;
+      border-left: 3px solid var(--gold);
+      background: rgba(217,168,78,.06);
+      border-radius: 0 12px 12px 0;
+      margin-top: 20px;
+    }
+
+    .mike-highlight-box p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--gold-2);
+      font-style: italic;
+      line-height: 1.65;
+    }
+
+    /* stats card */
+    .mike-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-self: start;
+    }
+
+    .mike-stat {
+      padding: 22px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
+    }
+
+    .mike-stat strong {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 38px;
+      color: var(--gold-3);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .mike-stat span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── What's included ───────────────── */
+    .mike-includes {
+      padding: 48px 0 40px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .mike-includes .section-header {
+      margin-bottom: 28px;
+    }
+
+    .mike-includes .section-header h2 {
+      font-family: Georgia, serif;
+      font-size: clamp(24px, 3vw, 34px);
+      color: var(--gold-3);
+      margin: 0 0 8px;
+    }
+
+    .mike-includes .section-header p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .includes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .include-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(18,22,20,.88), rgba(10,12,11,.92));
+      transition: var(--transition);
+    }
+
+    .include-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+    }
+
+    .include-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .include-card h3 {
+      font-family: Georgia, serif;
+      font-size: 17px;
+      color: var(--gold-3);
+      margin: 0 0 8px;
+    }
+
+    .include-card p {
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── For who ────────────────────────── */
+    .mike-forwho {
+      padding: 48px 0 40px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .forwho-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .forwho-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .forwho-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(217,168,78,.15);
+      border: 1px solid var(--gold);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: var(--gold-3);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .forwho-item p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .forwho-item p b {
+      display: block;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    /* ── Final CTA ───────────────────── */
+    .mike-final-cta {
+      padding: 54px 0 0;
+      text-align: center;
+    }
+
+    .mike-final-cta h2 {
+      font-family: Georgia, serif;
+      font-size: clamp(28px, 3.5vw, 46px);
+      color: var(--gold-3);
+      margin: 0 0 14px;
+      line-height: 1.1;
+    }
+
+    .mike-final-cta p {
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .mike-final-cta .coupon-inline {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      margin: 24px auto 0;
+    }
+
+    .mike-final-cta .coupon-inline small {
+      margin: 0;
+    }
+
+    /* ── Responsive ─────────────────── */
+    @media (max-width: 900px) {
+      .mike-hero { padding: 48px 20px; min-height: auto; }
+      .mike-wrap { padding: 0 20px; }
+      .mike-about { grid-template-columns: 1fr; }
+      .mike-stats { grid-template-columns: repeat(2, 1fr); }
+      .includes-grid { grid-template-columns: 1fr 1fr; }
+      .forwho-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .includes-grid { grid-template-columns: 1fr; }
+      .mike-stats { grid-template-columns: 1fr 1fr; }
+      .mike-cta-row { flex-direction: column; align-items: stretch; }
+      .mike-buy-btn { justify-content: center; }
+      .mike-final-cta .coupon-inline { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
   ${renderTopbar("curso")}
 
-  <main class="course-page">
-    <section class="course-hero glass">
-      <div>
-        <p class="eyebrow">Próxima etapa da missão</p>
-        <h1>Curso completo para acelerar sua aprovação</h1>
-        <p>
-          Seu plano mostra o caminho. O curso completo entrega aulas, estratégia, revisão,
-          questões, redação e direção para executar com constância até a prova.
+  <main class="mike-page">
+
+    <!-- Hero -->
+    <section class="mike-hero">
+      <div class="mike-hero-content">
+        <div class="mike-kicker">✦ Preparatório PMBA</div>
+        <h1>Manual<span>do Mike</span></h1>
+        <p class="mike-sub">
+          O preparatório completo para o concurso da Polícia Militar da Bahia.
+          Aulas, estratégia, questões, simulados e tudo o que você precisa para
+          chegar à prova com máxima performance.
         </p>
-        <div class="course-actions">
-          <a class="submit-btn course-btn" href="${COURSE_URL}" target="_blank" rel="noopener">
-            Comprar curso completo
+        <div class="mike-cta-row">
+          <a class="mike-buy-btn" href="${MIKE_URL}" target="_blank" rel="noopener">
+            Garantir meu acesso →
           </a>
-          <a class="ghost-btn" href="/">Voltar ao gerador</a>
+          <div class="coupon-inline">
+            <small>Cupom de desconto</small>
+            <strong>${MIKE_COUPON}</strong>
+            <span>Use no checkout</span>
+          </div>
         </div>
       </div>
-      <div class="course-card">
-        <h2>O que incluir na oferta</h2>
-        <ul>
-          <li>Aulas organizadas por edital e por prioridade</li>
-          <li>Cronograma Pomodoro semanal</li>
-          <li>Banco de questões e simulados</li>
-          <li>Redação com modelo de correção</li>
-          <li>Revisão 24h / 7 dias / 15 dias</li>
-          <li>Orientação para TAF e fases posteriores</li>
-        </ul>
-      </div>
     </section>
+
+    <div class="mike-wrap">
+
+      <!-- About -->
+      <div class="mike-about">
+        <div class="mike-about-text">
+          <p class="eyebrow">O que é o Manual do Mike</p>
+          <h2>O preparatório que transforma candidatas em aprovadas</h2>
+          <p>
+            O <strong style="color:var(--gold-3)">Preparatório PMBA – Manual do Mike</strong> é um
+            curso estruturado e focado nos padrões reais de cobrança do concurso da Polícia Militar
+            da Bahia. Criado para quem precisa de direção, não de volume desnecessário.
+          </p>
+          <p>
+            Ao invés de estudar o edital de forma genérica, o Manual do Mike aplica
+            <strong style="color:var(--gold-3)">engenharia reversa da banca</strong>: cada
+            disciplina é trabalhada com base no que realmente cai na prova, com linguagem clara
+            e objetiva para quem quer resultado.
+          </p>
+          <p>
+            Combinado com a plataforma Elite Feminina — que gera seu cronograma Pomodoro
+            personalizado e entrega os materiais estratégicos de apoio — você terá uma
+            preparação completa, do zero à aprovação.
+          </p>
+          <div class="mike-highlight-box">
+            <p>
+              "A aprovação é uma questão de estratégia. Estudar mais não basta —
+              é preciso estudar o certo, na ordem certa, com o método certo."
+            </p>
+          </div>
+        </div>
+
+        <div class="mike-stats">
+          <div class="mike-stat">
+            <strong>12</strong>
+            <span>Disciplinas cobertas pelo edital PMBA</span>
+          </div>
+          <div class="mike-stat">
+            <strong>80</strong>
+            <span>Questões na prova objetiva</span>
+          </div>
+          <div class="mike-stat">
+            <strong>FCC</strong>
+            <span>Banca organizada com padrão preditivo</span>
+          </div>
+          <div class="mike-stat">
+            <strong>100%</strong>
+            <span>Focado em SD PMBA e CFO PMBA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- What's included -->
+      <div class="mike-includes">
+        <div class="section-header">
+          <h2>O que você encontra no preparatório</h2>
+          <p>Conteúdo estruturado para cobrir todas as frentes do concurso com eficiência.</p>
+        </div>
+        <div class="includes-grid">
+          <div class="include-card">
+            <span class="include-icon">📖</span>
+            <h3>Aulas por disciplina</h3>
+            <p>Conteúdo organizado por matéria, focado nos tópicos com maior peso e frequência de cobrança na FCC.</p>
+          </div>
+          <div class="include-card">
+            <span class="include-icon">⚖️</span>
+            <h3>Bloco jurídico completo</h3>
+            <p>Constitucional, Administrativo, Penal, Penal Militar, Direitos Humanos e Igualdade Racial — do jeito que a banca cobra.</p>
+          </div>
+          <div class="include-card">
+            <span class="include-icon">📝</span>
+            <h3>Questões e gabaritos</h3>
+            <p>Exercícios comentados com análise das alternativas e padrões de eliminação usados pela FCC.</p>
+          </div>
+          <div class="include-card">
+            <span class="include-icon">✍️</span>
+            <h3>Redação dissertativa</h3>
+            <p>Estrutura, modelo e correção focada nos critérios da banca para a prova discursiva do concurso.</p>
+          </div>
+          <div class="include-card">
+            <span class="include-icon">🎯</span>
+            <h3>Simulados por edital</h3>
+            <p>Treinos com o mesmo formato e tempo da prova real para você chegar preparada no dia da avaliação.</p>
+          </div>
+          <div class="include-card">
+            <span class="include-icon">🗺️</span>
+            <h3>Estratégia de estudo</h3>
+            <p>Roteiro de revisões, método de absorção e priorização dos conteúdos de maior retorno para a nota final.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- For who -->
+      <div class="mike-forwho">
+        <p class="eyebrow">Para quem é este preparatório</p>
+        <h2 style="font-family:Georgia,serif;font-size:clamp(22px,3vw,32px);color:var(--gold-3);margin:10px 0 0;">
+          Este curso é para você se…
+        </h2>
+        <div class="forwho-grid">
+          <div class="forwho-item">
+            <span class="forwho-check">✓</span>
+            <p><b>Está se preparando para SD PMBA ou CFO PMBA</b>e quer um preparatório focado, sem enrolação.</p>
+          </div>
+          <div class="forwho-item">
+            <span class="forwho-check">✓</span>
+            <p><b>Estuda sozinha e precisa de direção</b>para não perder tempo com conteúdo de baixo impacto.</p>
+          </div>
+          <div class="forwho-item">
+            <span class="forwho-check">✓</span>
+            <p><b>Já tentou antes e quer uma abordagem diferente</b>— baseada nos padrões reais da FCC.</p>
+          </div>
+          <div class="forwho-item">
+            <span class="forwho-check">✓</span>
+            <p><b>Tem tempo limitado e precisa de eficiência</b>máxima em cada hora dedicada ao estudo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final CTA -->
+      <div class="mike-final-cta">
+        <h2>Pronta para a missão?</h2>
+        <p>
+          Garanta agora o acesso ao Preparatório PMBA – Manual do Mike e
+          use o cupom exclusivo <strong style="color:var(--gold-3)">${MIKE_COUPON}</strong> para
+          garantir seu desconto no checkout.
+        </p>
+        <a class="mike-buy-btn" href="${MIKE_URL}" target="_blank" rel="noopener">
+          Garantir meu acesso com desconto →
+        </a>
+        <div class="coupon-inline">
+          <small>Cupom exclusivo Elite Feminina</small>
+          <strong>${MIKE_COUPON}</strong>
+          <span>↑ Copie e cole no checkout para o desconto</span>
+        </div>
+      </div>
+
+    </div>
   </main>
+
+  <footer style="margin:40px 40px 0;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;background:rgba(10,12,11,.8);color:var(--muted);">
+    <strong style="color:var(--gold-3)">ELITE FEMININA — MISSÃO FARDA</strong>
+    <a href="/" style="color:var(--muted);font-size:13px;">← Voltar à plataforma</a>
+  </footer>
+
 </body>
 </html>`;
 }
@@ -1406,7 +1910,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/curso", (req, res) => {
-  res.redirect(302, COURSE_URL);
+  res.send(renderCursoPage());
 });
 
 app.get("/health", (req, res) => {
