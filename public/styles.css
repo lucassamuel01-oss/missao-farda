@@ -39,17 +39,21 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
+  /* Remove o destaque azul padrão de tap no Android */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html{
   scroll-behavior:smooth;
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
+  /* overflow-x no html evita o bug do body::before no Android */
+  overflow-x:hidden;
 }
 
 body{
   min-height:100vh;
-  overflow-x:hidden;
+  /* Não usar overflow-x:hidden no body — causa bug de touch no Android Chrome */
 
   font-family:"Segoe UI",Arial,sans-serif;
   color:var(--text);
@@ -60,12 +64,35 @@ body{
     linear-gradient(135deg,#060706 0%, #0e1210 48%, #070807 100%);
 }
 
+/* ── touch-action: manipulation em todos os elementos interativos
+   elimina o delay de 300ms e taps ignorados no Android ────────── */
+a,
+button,
+label,
+select,
+input,
+textarea,
+[role="button"],
+summary{
+  touch-action:manipulation;
+}
+
+/* cursor pointer explícito — ajuda o Android a reconhecer o elemento como clicável */
+button,
+[role="button"],
+label.choice,
+summary{
+  cursor:pointer;
+}
+
 body::before{
   content:"";
   position:fixed;
   inset:0;
   pointer-events:none;
   z-index:-1;
+  /* Garante que nunca intercepte eventos de toque */
+  user-select:none;
 
   background:
     linear-gradient(90deg, rgba(0,0,0,.28), transparent 38%, rgba(0,0,0,.54)),
@@ -109,6 +136,9 @@ a{
   position:sticky;
   top:0;
   z-index:100;
+  /* isolation cria um stacking context limpo — evita bug do backdrop-filter
+     interceptar eventos de toque nos elementos abaixo no Android Chrome */
+  isolation:isolate;
 
   min-height:82px;
   padding:0 40px;
@@ -121,6 +151,7 @@ a{
   border-bottom:1px solid var(--line);
 
   background:rgba(5,7,6,.86);
+  -webkit-backdrop-filter:blur(18px);
   backdrop-filter:blur(18px);
   box-shadow:0 2px 0 rgba(255,255,255,.02);
 }
@@ -226,7 +257,7 @@ nav a:hover::after{
 .logout-link{
   border:1px solid var(--line);
   border-radius:10px;
-  padding:8px 12px;
+  padding:10px 14px;
   cursor:pointer;
 
   color:var(--text);
@@ -236,6 +267,11 @@ nav a:hover::after{
   font-weight:800;
   text-transform:uppercase;
   letter-spacing:.8px;
+
+  /* Alvo de toque mínimo */
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
 
   transition:var(--transition);
 }
@@ -292,6 +328,8 @@ nav a:hover::after{
   padding:18px 20px;
   font-size:18px;
   font-family:Georgia,serif;
+  /* Alvo de toque mínimo para Android */
+  min-height:54px;
 }
 
 .nav-highlight{
@@ -348,7 +386,10 @@ nav a:hover::after{
   grid-template-columns:1fr .7fr 1.05fr;
   gap:28px;
 
+  /* 100dvh (dynamic viewport height) evita overflow no Android/iOS com barra de endereço.
+     Fallback para browsers mais antigos que não suportam dvh. */
   min-height:calc(100vh - 82px);
+  min-height:calc(100dvh - 82px);
   padding:54px 40px 28px;
 }
 
@@ -454,6 +495,7 @@ h1 span{
   box-shadow:
     var(--shadow-lg),
     inset 0 1px rgba(255,255,255,.03);
+  -webkit-backdrop-filter:blur(14px);
   backdrop-filter:blur(14px);
 }
 
@@ -544,8 +586,13 @@ textarea{
   background:#0a0d0c;
   color:var(--text);
 
+  /* Mínimo 16px — previne auto-zoom no Android/iOS que quebra o layout */
+  font-size:max(16px, 1em);
+
   outline:none;
   transition:var(--transition);
+  /* Melhora comportamento de tap/toque */
+  -webkit-tap-highlight-color:rgba(217,168,78,.18);
 }
 
 input::placeholder,
@@ -595,6 +642,9 @@ textarea{
   color:var(--text);
   font-weight:900;
   cursor:pointer;
+
+  /* Alvo mínimo de toque para Android */
+  min-height:48px;
 
   transition:var(--transition);
 }
@@ -647,13 +697,15 @@ textarea{
   align-items:center;
   gap:10px;
 
-  padding:12px;
+  padding:14px 12px;
   border-radius:12px;
 
   border:1px solid rgba(255,255,255,.08);
   background:#090c0b;
 
   cursor:pointer;
+  /* Alvo mínimo 44px de altura para toque confortável */
+  min-height:44px;
   transition:var(--transition);
 }
 
@@ -1508,14 +1560,22 @@ details p{
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.6);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   z-index: 198;
   opacity: 0;
+  /* ─── BUG FIX CRÍTICO ──────────────────────────────────────────────
+     Sem pointer-events:none, o overlay fica invisível (opacity:0) mas
+     cobre a tela inteira e bloqueia TODOS os toques no Android.
+     pointer-events:none garante que apenas quando .show (visível) ele
+     intercepte eventos de toque.                                       */
+  pointer-events: none;
   transition: opacity .3s;
 }
 
 .mobile-nav-overlay.show {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .mobile-nav {
@@ -1527,16 +1587,20 @@ details p{
   z-index: 199;
   background: #0c100e;
   border-left: 1px solid var(--line);
-  padding: 0 0 32px;
+  padding: 0 0 env(safe-area-inset-bottom, 32px);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform .32s cubic-bezier(.25,.8,.25,1);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Quando fechado, não intercepta toques */
+  pointer-events: none;
 }
 
 .mobile-nav.open {
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 .mobile-nav-header {
@@ -1660,10 +1724,16 @@ details p{
 
   .hamburger{
     display:flex;
+    /* Alvo de toque mínimo 44×44px (Android/iOS HIG) */
+    min-width:44px;
+    min-height:44px;
+    width:44px;
+    height:44px;
   }
 
   .mobile-nav-overlay{
     display:block;
+    /* pointer-events:none herdado — overlay visível só intercepta quando .show */
   }
 
   .hero,
@@ -1767,6 +1837,61 @@ details p{
 
   .tip-card{
     min-height:auto;
+  }
+}
+
+/* =========================
+   TOUCH DEVICE OVERRIDES
+   Remove :hover transforms em dispositivos sem mouse real —
+   evita que o estado :hover fique "travado" após um tap no Android,
+   o que pode impedir taps subsequentes no mesmo elemento.
+========================= */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Desativa translateY nos botões — no touch fica preso e bloqueia o próximo tap */
+  .submit-btn:hover,
+  .nav-highlight:hover,
+  .btn:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .ghost-btn:hover {
+    transform: none;
+  }
+
+  .choice:hover {
+    transform: none;
+  }
+
+  .material-card a:hover {
+    transform: none;
+  }
+
+  nav a:hover::after {
+    width: 0;
+  }
+
+  /* Feedback visual de toque — substitui :hover com :active */
+  .submit-btn:active,
+  .nav-highlight:active,
+  .btn:active {
+    filter: brightness(1.1);
+  }
+
+  .ghost-btn:active {
+    background: rgba(217,168,78,.12);
+    border-color: var(--line-strong);
+  }
+
+  .choice:active {
+    border-color: var(--gold);
+    background: rgba(217,168,78,.08);
+  }
+
+  /* -webkit-tap-highlight nos elementos interativos */
+  button, a, label, .choice, summary {
+    -webkit-tap-highlight-color: rgba(217,168,78,.2);
   }
 }
 
