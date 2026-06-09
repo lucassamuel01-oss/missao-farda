@@ -287,36 +287,58 @@
 
       <h2>Crie sua conta</h2>
 
-      <div class="error-msg" id="error-msg"></div>
+      <!-- Estado de erro de convite (mostrado quando token é inválido/ausente) -->
+      <div id="invalid-invite" style="display:none;">
+        <div class="error-msg" style="display:block;" id="invite-error-msg">
+          Link de cadastro inválido.
+        </div>
+        <p style="font-size:.87rem;color:var(--muted);line-height:1.6;margin-bottom:18px;">
+          Este link não é válido, já foi utilizado ou expirou. Solicite um novo link ao suporte.
+        </p>
+        <a href="https://wa.me/557388236337" target="_blank" rel="noopener"
+           style="display:block;text-align:center;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--gold-3),var(--gold));color:#16110a;font-weight:900;text-decoration:none;font-family:Georgia,serif;letter-spacing:.06em;">
+          Falar com o suporte →
+        </a>
+        <div class="reg-note" style="margin-top:16px;">
+          Já tem conta?
+          <a href="/login">Entrar na plataforma</a>
+        </div>
+      </div>
 
-      <form id="reg-form" novalidate>
-        <div class="field">
-          <label for="name">Nome completo</label>
-          <input type="text" id="name" name="name" required autocomplete="name"
-                 placeholder="Seu nome completo" />
-        </div>
-        <div class="field">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" required autocomplete="email"
-                 placeholder="seu@email.com" />
-        </div>
-        <div class="field">
-          <label for="password">Senha</label>
-          <input type="password" id="password" name="password" required autocomplete="new-password"
-                 placeholder="Mínimo 6 caracteres" />
-        </div>
-        <div class="field">
-          <label for="confirmPassword">Confirmar senha</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password"
-                 placeholder="Repita a senha" />
-        </div>
+      <!-- Formulário de cadastro (mostrado quando token é válido) -->
+      <div id="form-wrap">
+        <div class="error-msg" id="error-msg"></div>
 
-        <button type="submit" class="reg-btn" id="regBtn">Criar minha conta →</button>
-      </form>
+        <form id="reg-form" novalidate>
+          <input type="hidden" id="token-field" name="token" />
+          <div class="field">
+            <label for="name">Nome completo</label>
+            <input type="text" id="name" name="name" required autocomplete="name"
+                   placeholder="Seu nome completo" />
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" required autocomplete="email"
+                   placeholder="seu@email.com" />
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password"
+                   placeholder="Mínimo 6 caracteres" />
+          </div>
+          <div class="field">
+            <label for="confirmPassword">Confirmar senha</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password"
+                   placeholder="Repita a senha" />
+          </div>
 
-      <div class="reg-note">
-        Já tem conta?
-        <a href="/login">Entrar na plataforma</a>
+          <button type="submit" class="reg-btn" id="regBtn">Criar minha conta →</button>
+        </form>
+
+        <div class="reg-note">
+          Já tem conta?
+          <a href="/login">Entrar na plataforma</a>
+        </div>
       </div>
     </div>
 
@@ -375,10 +397,39 @@
   </main>
 
   <script>
+    // ── Validar token de convite ───────────────────────────────
+    (function initInvite() {
+      const params = new URLSearchParams(window.location.search);
+      const token  = params.get('convite');
+
+      if (!token) {
+        // Nenhum token na URL — mostrar estado de erro
+        document.getElementById('form-wrap').style.display    = 'none';
+        document.getElementById('invalid-invite').style.display = 'block';
+        return;
+      }
+
+      // Token presente: configurar campo oculto e validar no servidor
+      document.getElementById('token-field').value = token;
+
+      // Validação antecipada (opcional, evita preencher o form com token inválido)
+      fetch('/cadastro?convite=' + encodeURIComponent(token), { method: 'HEAD' })
+        .then(r => {
+          if (r.redirected || r.status >= 300) {
+            // Redirecionou para /login?erro=... → token inválido
+            document.getElementById('form-wrap').style.display    = 'none';
+            document.getElementById('invalid-invite').style.display = 'block';
+          }
+        })
+        .catch(() => {}); // Falha silenciosa — deixar o submit revelar o erro
+    })();
+
+    // ── Envio do formulário ────────────────────────────────────
     document.getElementById('reg-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn    = document.getElementById('regBtn');
       const errEl  = document.getElementById('error-msg');
+      const token           = document.getElementById('token-field').value;
       const name            = document.getElementById('name').value.trim();
       const email           = document.getElementById('email').value.trim();
       const password        = document.getElementById('password').value;
@@ -409,15 +460,26 @@
         const res = await fetch('/cadastro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ name, email, password, confirmPassword }),
+          body: new URLSearchParams({ name, email, password, confirmPassword, token }),
         });
         const data = await res.json();
 
         if (data.success) {
           window.location.href = data.redirect || '/';
         } else {
-          errEl.textContent = data.message || 'Erro ao criar conta.';
-          errEl.style.display = 'block';
+          // Token inválido/expirado — mostrar estado de erro em vez de mensagem inline
+          if (data.message && (
+            data.message.includes('inválido') ||
+            data.message.includes('utilizado') ||
+            data.message.includes('expirou')
+          )) {
+            document.getElementById('invite-error-msg').textContent = data.message;
+            document.getElementById('form-wrap').style.display    = 'none';
+            document.getElementById('invalid-invite').style.display = 'block';
+          } else {
+            errEl.textContent = data.message || 'Erro ao criar conta.';
+            errEl.style.display = 'block';
+          }
         }
       } catch {
         errEl.textContent = 'Erro de conexão. Tente novamente.';

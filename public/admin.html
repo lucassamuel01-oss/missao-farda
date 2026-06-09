@@ -91,25 +91,56 @@
       </div>
     </div>
 
-    <!-- Link de cadastro -->
+    <!-- Gerar convite único -->
     <div class="card">
-      <h2>🔗 Link de cadastro para alunas</h2>
-      <p style="color:var(--muted,#aaa);font-size:.88rem;margin-bottom:16px;line-height:1.6;">
-        Envie este link para a aluna após a confirmação do pagamento. Ela criará a própria conta,
-        definirá a senha e seus dados serão preenchidos automaticamente no gerador de plano.
+      <h2>🔗 Gerar link de cadastro por aluna</h2>
+      <p style="color:var(--muted,#aaa);font-size:.88rem;margin-bottom:18px;line-height:1.6;">
+        Cada link é <strong style="color:#f6f1e7;">único e de uso único</strong> — após a aluna se cadastrar, o link é invalidado automaticamente.
+        Envie após confirmação do pagamento.
       </p>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-        <input type="text" id="reg-link" readonly
-          style="flex:1;min-width:200px;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:inherit;font-size:.9rem;cursor:text;"
-        />
-        <button class="btn-primary" onclick="copyRegLink()" id="copy-btn"
-          style="white-space:nowrap;">Copiar link</button>
+      <div class="form-row" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Identificação (ex: nome da aluna)</label>
+          <input type="text" id="invite-label" placeholder="Maria da Silva — pago em 01/06" />
+        </div>
+        <div class="field">
+          <label>Link expira em <span style="opacity:.5;font-weight:400;">(opcional)</span></label>
+          <input type="date" id="invite-expires" />
+        </div>
       </div>
-      <p style="margin-top:10px;font-size:.78rem;color:var(--muted,#aaa);">
-        Acesso criado pelas alunas é válido por
-        <strong id="default-days-label" style="color:var(--gold-2,#f2d28a);">365 dias</strong>
-        a partir do cadastro.
-      </p>
+      <button class="btn-primary" onclick="generateInvite()">Gerar link de cadastro</button>
+
+      <!-- Link gerado -->
+      <div id="invite-result" style="display:none;margin-top:18px;padding:16px;border-radius:12px;border:1px solid rgba(217,168,78,.35);background:rgba(217,168,78,.07);">
+        <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold,#d9a84e);margin-bottom:8px;">Link gerado ✓</p>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <input type="text" id="invite-url" readonly
+            style="flex:1;min-width:180px;padding:10px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#f6f1e7;font-size:.85rem;" />
+          <button class="btn-primary" onclick="copyInviteUrl()" style="white-space:nowrap;padding:10px 18px;">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Convites gerados -->
+    <div class="card">
+      <h2>Links gerados</h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Identificação</th>
+              <th>Status</th>
+              <th>Criado em</th>
+              <th>Expira em</th>
+              <th>Usado por</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="invites-table">
+            <tr class="empty-row"><td colspan="6">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Criar acesso manualmente (opcional) -->
@@ -309,27 +340,102 @@
       window.location.href = '/login';
     }
 
-    // ── Link de cadastro ──────────────────────────────────────
-    function initRegLink() {
-      const url = window.location.origin + '/cadastro';
-      document.getElementById('reg-link').value = url;
-    }
+    // ── Convites únicos ───────────────────────────────────────
+    async function generateInvite() {
+      const label     = document.getElementById('invite-label').value.trim();
+      const expiresAt = document.getElementById('invite-expires').value || null;
 
-    function copyRegLink() {
-      const input = document.getElementById('reg-link');
-      navigator.clipboard.writeText(input.value).then(() => {
-        const btn = document.getElementById('copy-btn');
-        btn.textContent = '✓ Copiado!';
-        showToast('Link copiado para a área de transferência!');
-        setTimeout(() => { btn.textContent = 'Copiar link'; }, 2000);
-      }).catch(() => {
-        input.select();
-        document.execCommand('copy');
-        showToast('Link copiado!');
+      const res  = await fetch('/admin/invites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label, expiresAt }),
       });
+      const data = await res.json();
+
+      if (data.success) {
+        document.getElementById('invite-url').value = data.invite.url;
+        document.getElementById('invite-result').style.display = 'block';
+        document.getElementById('invite-label').value   = '';
+        document.getElementById('invite-expires').value = '';
+        copyInviteUrl();
+        loadInvites();
+      } else {
+        showToast(data.message || 'Erro ao gerar link.', 'err');
+      }
     }
 
-    initRegLink();
+    function copyInviteUrl() {
+      const input = document.getElementById('invite-url');
+      const url   = input.value;
+      if (!url) return;
+      navigator.clipboard.writeText(url)
+        .then(() => showToast('Link copiado! Cole no WhatsApp da aluna ✓'))
+        .catch(() => { input.select(); document.execCommand('copy'); showToast('Link copiado!'); });
+    }
+
+    async function revokeInvite(id, label) {
+      if (!confirm(`Revogar o link "${label || id}"? A aluna não poderá mais se cadastrar por ele.`)) return;
+      const res  = await fetch(`/admin/invites/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { showToast('Link revogado.'); loadInvites(); }
+      else showToast(data.message || 'Erro.', 'err');
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => showToast('Link copiado!'))
+        .catch(() => showToast('Não foi possível copiar.', 'err'));
+    }
+
+    async function loadInvites() {
+      const res = await fetch('/admin/invites');
+      if (!res.ok) return;
+      const invites = await res.json();
+      const tbody   = document.getElementById('invites-table');
+
+      if (!invites.length) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Nenhum link gerado ainda.</td></tr>';
+        return;
+      }
+
+      const now = Date.now();
+      tbody.innerHTML = invites.slice().reverse().map(inv => {
+        const used    = !!inv.usedAt;
+        const expired = !used && inv.expiresAt && new Date(inv.expiresAt).getTime() < now;
+
+        const badge = used
+          ? '<span class="badge badge-inactive">Usado</span>'
+          : expired
+            ? '<span class="badge badge-expired">Expirado</span>'
+            : '<span class="badge badge-active">Disponível</span>';
+
+        const usedByUser = used
+          ? (escHtml(inv.usedBy || '—'))
+          : '<span style="opacity:.35">—</span>';
+
+        const expStr = inv.expiresAt
+          ? new Date(inv.expiresAt).toLocaleDateString('pt-BR')
+          : '<span style="opacity:.35">Sem limite</span>';
+
+        const url = window.location.origin + '/cadastro?convite=' + inv.token;
+
+        const actions = used || expired
+          ? `<button class="action-btn danger" onclick="revokeInvite('${inv.id}','${escHtml(inv.label || inv.id)}')">Remover</button>`
+          : `<button class="action-btn" onclick="copyText('${url}')">Copiar link</button>
+             <button class="action-btn danger" onclick="revokeInvite('${inv.id}','${escHtml(inv.label || inv.id)}')">Revogar</button>`;
+
+        return `<tr>
+          <td>${escHtml(inv.label) || '<span style="opacity:.4">sem rótulo</span>'}</td>
+          <td>${badge}</td>
+          <td>${new Date(inv.createdAt).toLocaleDateString('pt-BR')}</td>
+          <td>${expStr}</td>
+          <td style="font-size:.8rem;opacity:.7;">${usedByUser}</td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">${actions}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    loadInvites();
     loadUsers();
   </script>
 </body>

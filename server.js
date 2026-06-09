@@ -16,7 +16,8 @@ const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const LEADS_JSON = path.join(DATA_DIR, "leads.json");
 const LEADS_CSV = path.join(DATA_DIR, "leads.csv");
-const USERS_JSON = path.join(DATA_DIR, "users.json");
+const USERS_JSON   = path.join(DATA_DIR, "users.json");
+const INVITES_JSON = path.join(DATA_DIR, "invites.json");
 const SESSION_SECRET_FILE = path.join(DATA_DIR, "session-secret.txt");
 
 app.disable("x-powered-by");
@@ -54,8 +55,9 @@ app.use(
 // Na inicialização, carregamos o MongoDB (ou o arquivo local como fallback).
 
 const MONGODB_URI = process.env.MONGODB_URI || null;
-let _mongoDb = null;        // conexão ativa
-let _usersCache = null;     // null = ainda não carregado
+let _mongoDb      = null;   // conexão ativa
+let _usersCache   = null;   // null = ainda não carregado
+let _invitesCache = [];     // convites únicos por aluna
 
 async function connectMongo() {
   if (!MONGODB_URI) return null;
@@ -108,6 +110,47 @@ function persistUsersToDB(users) {
       console.error("[DB] Erro ao salvar users.json:", err.message);
     }
   }
+}
+
+// ── Convites ──────────────────────────────────────────────────────────────────
+
+function readInvites() {
+  return _invitesCache;
+}
+
+function writeInvites(invites) {
+  _invitesCache = invites;
+  if (_mongoDb) {
+    _mongoDb.collection("app_data")
+      .replaceOne({ _id: "invites" }, { _id: "invites", invites }, { upsert: true })
+      .catch((err) => console.error("[DB] Erro ao salvar convites:", err.message));
+  } else {
+    try {
+      ensureDirectories();
+      fs.writeFileSync(INVITES_JSON, JSON.stringify(invites, null, 2), "utf8");
+    } catch (err) {
+      console.error("[DB] Erro ao salvar invites.json:", err.message);
+    }
+  }
+}
+
+async function loadInvitesFromStorage() {
+  if (_mongoDb) {
+    try {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "invites" });
+      const list = doc && Array.isArray(doc.invites) ? doc.invites : [];
+      console.log(`[DB] ${list.length} convite(s) carregado(s)`);
+      return list;
+    } catch (err) {
+      console.error("[DB] Erro ao carregar convites:", err.message);
+    }
+  }
+  if (!fs.existsSync(INVITES_JSON)) return [];
+  try {
+    const raw = fs.readFileSync(INVITES_JSON, "utf8").trim();
+    const parsed = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
 }
 
 // ── Auth helpers ──────────────────────────────────────────────────────────────
@@ -206,14 +249,39 @@ app.get("/login", (req, res) => {
 });
 
 // ── Cadastro (auto-registro) ───────────────────────────────────────────────────
+// ── Cadastro via convite único ─────────────────────────────────────────────────
+
+function validateInviteToken(token) {
+  if (!token) return null;
+  const invite = readInvites().find((i) => i.token === token);
+  if (!invite)            return { error: "Este link de cadastro é inválido." };
+  if (invite.usedAt)      return { error: "Este link já foi utilizado. Faça login ou solicite um novo link." };
+  if (invite.expiresAt && new Date(invite.expiresAt).getTime() < Date.now())
+                          return { error: "Este link expirou. Solicite um novo link ao suporte." };
+  return { invite };
+}
+
 app.get("/cadastro", (req, res) => {
   if (req.session.userId) return res.redirect("/");
+  const token = String(req.query.convite || "").trim();
+  const result = validateInviteToken(token);
+  if (!result || result.error) {
+    // Redireciona para login com mensagem de erro embutida na URL
+    const msg = encodeURIComponent(result?.error || "Link de cadastro inválido ou ausente.");
+    return res.redirect(`/login?erro=${msg}`);
+  }
   res.sendFile(path.join(PUBLIC_DIR, "cadastro.html"));
 });
 
-app.post("/cadastro", async (req, res) => {
-  const name  = String(req.body.name  || "").trim();
-  const email = String(req.body.email || "").trim().toLowerCase();
+app.post("/cadastro", (req, res) => {
+  const token = String(req.body.token || "").trim();
+  const result = validateInviteToken(token);
+  if (!result || result.error) {
+    return res.status(400).json({ success: false, message: result?.error || "Convite inválido." });
+  }
+
+  const name            = String(req.body.name            || "").trim();
+  const email           = String(req.body.email           || "").trim().toLowerCase();
   const password        = String(req.body.password        || "");
   const confirmPassword = String(req.body.confirmPassword || "");
 
@@ -253,6 +321,14 @@ app.post("/cadastro", async (req, res) => {
 
   users.push(newUser);
   writeUsers(users);
+
+  // Marca o convite como usado (não pode ser reutilizado)
+  const invites = readInvites();
+  const idx = invites.findIndex((i) => i.token === token);
+  if (idx !== -1) {
+    invites[idx] = { ...invites[idx], usedAt: new Date().toISOString(), usedBy: newUser.id };
+    writeInvites(invites);
+  }
 
   // Loga automaticamente após o cadastro
   req.session.userId = newUser.id;
@@ -316,6 +392,49 @@ app.get("/minha-area", (req, res) => {
 app.get("/admin", requireAdmin, (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "admin.html"));
 });
+
+// ── Rotas de convites (admin) ─────────────────────────────────────────────────
+
+// Listar convites
+app.get("/admin/invites", requireAdmin, (req, res) => {
+  res.json(readInvites());
+});
+
+// Gerar novo convite
+app.post("/admin/invites", requireAdmin, (req, res) => {
+  const label    = String(req.body.label    || "").trim();
+  const expiresAt = req.body.expiresAt || null;
+
+  const token = crypto.randomBytes(24).toString("hex");
+  const invite = {
+    id: crypto.randomUUID(),
+    token,
+    label,
+    createdAt: new Date().toISOString(),
+    expiresAt: expiresAt || null,
+    usedAt: null,
+    usedBy: null,
+  };
+
+  const invites = readInvites();
+  invites.push(invite);
+  writeInvites(invites);
+
+  const base = `${req.protocol}://${req.get("host")}`;
+  res.json({ success: true, invite: { ...invite, url: `${base}/cadastro?convite=${token}` } });
+});
+
+// Revogar convite
+app.delete("/admin/invites/:id", requireAdmin, (req, res) => {
+  const filtered = readInvites().filter((i) => i.id !== req.params.id);
+  if (filtered.length === readInvites().length) {
+    return res.status(404).json({ success: false, message: "Convite não encontrado." });
+  }
+  writeInvites(filtered);
+  res.json({ success: true });
+});
+
+// ── Rotas de usuários (admin) ─────────────────────────────────────────────────
 
 app.get("/admin/users", requireAdmin, (req, res) => {
   const users = readUsers().map(({ password: _, ...u }) => u);
@@ -2004,8 +2123,9 @@ app.use((req, res) => {
   // 1. Conecta ao MongoDB (se MONGODB_URI definido)
   await connectMongo();
 
-  // 2. Carrega usuários na memória (MongoDB → fallback arquivo)
-  _usersCache = await loadUsersFromStorage();
+  // 2. Carrega dados persistentes na memória
+  _usersCache   = await loadUsersFromStorage();
+  _invitesCache = await loadInvitesFromStorage();
 
   // 3. Garante que existe pelo menos um admin
   seedAdminUser();
