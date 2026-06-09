@@ -5,6 +5,7 @@ const fs = require("fs");
 const crypto = require("crypto");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,9 +48,42 @@ app.use(
   })
 );
 
-// ── Auth helpers ──────────────────────────────────────────────────────────────
+// ── MongoDB + cache em memória ────────────────────────────────────────────────
+// Estratégia: cache síncrono em memória + persistência assíncrona no MongoDB.
+// readUsers() e writeUsers() continuam síncronos — nenhum outro código muda.
+// Na inicialização, carregamos o MongoDB (ou o arquivo local como fallback).
 
-function readUsers() {
+const MONGODB_URI = process.env.MONGODB_URI || null;
+let _mongoDb = null;        // conexão ativa
+let _usersCache = null;     // null = ainda não carregado
+
+async function connectMongo() {
+  if (!MONGODB_URI) return null;
+  try {
+    const client = new MongoClient(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
+    await client.connect();
+    _mongoDb = client.db("elite-feminina");
+    console.log("[DB] MongoDB Atlas conectado ✓");
+    return _mongoDb;
+  } catch (err) {
+    console.error("[DB] Falha ao conectar MongoDB:", err.message);
+    return null;
+  }
+}
+
+async function loadUsersFromStorage() {
+  // 1) Tenta MongoDB
+  if (_mongoDb) {
+    try {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "users" });
+      const list = doc && Array.isArray(doc.users) ? doc.users : [];
+      console.log(`[DB] ${list.length} usuário(s) carregado(s) do MongoDB`);
+      return list;
+    } catch (err) {
+      console.error("[DB] Erro ao carregar usuários do MongoDB:", err.message);
+    }
+  }
+  // 2) Fallback: arquivo local (dev / sem MONGODB_URI)
   if (!fs.existsSync(USERS_JSON)) return [];
   try {
     const raw = fs.readFileSync(USERS_JSON, "utf8").trim();
@@ -60,9 +94,31 @@ function readUsers() {
   }
 }
 
+function persistUsersToDB(users) {
+  if (_mongoDb) {
+    _mongoDb.collection("app_data")
+      .replaceOne({ _id: "users" }, { _id: "users", users }, { upsert: true })
+      .catch((err) => console.error("[DB] Erro ao salvar usuários:", err.message));
+  } else {
+    // Fallback local
+    try {
+      ensureDirectories();
+      fs.writeFileSync(USERS_JSON, JSON.stringify(users, null, 2), "utf8");
+    } catch (err) {
+      console.error("[DB] Erro ao salvar users.json:", err.message);
+    }
+  }
+}
+
+// ── Auth helpers ──────────────────────────────────────────────────────────────
+
+function readUsers() {
+  return _usersCache || [];
+}
+
 function writeUsers(users) {
-  ensureDirectories();
-  fs.writeFileSync(USERS_JSON, JSON.stringify(users, null, 2), "utf8");
+  _usersCache = users;
+  persistUsersToDB(users);
 }
 
 function isAccessValid(user) {
@@ -1887,9 +1943,21 @@ app.use((req, res) => {
   return res.status(404).json({ success: false, message: "Rota não encontrada." });
 });
 
-ensureDirectories();
-seedAdminUser();
+// ── Startup assíncrono ────────────────────────────────────────────────────────
+(async () => {
+  ensureDirectories();
 
-app.listen(PORT, () => {
-  console.log(`Elite Feminina Missão Farda rodando em http://localhost:${PORT}`);
-});
+  // 1. Conecta ao MongoDB (se MONGODB_URI definido)
+  await connectMongo();
+
+  // 2. Carrega usuários na memória (MongoDB → fallback arquivo)
+  _usersCache = await loadUsersFromStorage();
+
+  // 3. Garante que existe pelo menos um admin
+  seedAdminUser();
+
+  // 4. Inicia o servidor
+  app.listen(PORT, () => {
+    console.log(`Elite Feminina Missão Farda rodando em http://localhost:${PORT}`);
+  });
+})();
