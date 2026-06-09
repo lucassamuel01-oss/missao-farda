@@ -91,37 +91,68 @@
       </div>
     </div>
 
-    <!-- Criar usuário -->
+    <!-- Link de cadastro -->
     <div class="card">
-      <h2>Criar novo acesso</h2>
-      <div class="form-row three">
-        <div class="field">
-          <label>Nome completo</label>
-          <input type="text" id="new-name" placeholder="Maria da Silva" />
-        </div>
-        <div class="field">
-          <label>E-mail</label>
-          <input type="email" id="new-email" placeholder="maria@email.com" />
-        </div>
-        <div class="field">
-          <label>Senha inicial</label>
-          <input type="password" id="new-password" placeholder="mínimo 6 caracteres" />
-        </div>
+      <h2>🔗 Link de cadastro para alunas</h2>
+      <p style="color:var(--muted,#aaa);font-size:.88rem;margin-bottom:16px;line-height:1.6;">
+        Envie este link para a aluna após a confirmação do pagamento. Ela criará a própria conta,
+        definirá a senha e seus dados serão preenchidos automaticamente no gerador de plano.
+      </p>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <input type="text" id="reg-link" readonly
+          style="flex:1;min-width:200px;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:inherit;font-size:.9rem;cursor:text;"
+        />
+        <button class="btn-primary" onclick="copyRegLink()" id="copy-btn"
+          style="white-space:nowrap;">Copiar link</button>
       </div>
-      <div class="form-row">
-        <div class="field">
-          <label>Acesso expira em</label>
-          <input type="date" id="new-expires" />
+      <p style="margin-top:10px;font-size:.78rem;color:var(--muted,#aaa);">
+        Acesso criado pelas alunas é válido por
+        <strong id="default-days-label" style="color:var(--gold-2,#f2d28a);">365 dias</strong>
+        a partir do cadastro.
+      </p>
+    </div>
+
+    <!-- Criar acesso manualmente (opcional) -->
+    <div class="card">
+      <details>
+        <summary style="cursor:pointer;font-size:1rem;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between;">
+          <span>Criar acesso manualmente <span style="font-weight:400;opacity:.5;font-size:.85rem;">(opcional)</span></span>
+          <span style="opacity:.45;font-size:.85rem;">▾</span>
+        </summary>
+        <div style="margin-top:18px;">
+          <p style="color:var(--muted,#aaa);font-size:.84rem;margin-bottom:16px;">
+            Use apenas quando precisar criar um acesso sem que a aluna passe pelo link de cadastro.
+          </p>
+          <div class="form-row three">
+            <div class="field">
+              <label>Nome completo</label>
+              <input type="text" id="new-name" placeholder="Maria da Silva" />
+            </div>
+            <div class="field">
+              <label>E-mail</label>
+              <input type="email" id="new-email" placeholder="maria@email.com" />
+            </div>
+            <div class="field">
+              <label>Senha inicial</label>
+              <input type="password" id="new-password" placeholder="mínimo 6 caracteres" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Acesso expira em</label>
+              <input type="date" id="new-expires" />
+            </div>
+            <div class="field">
+              <label>Perfil</label>
+              <select id="new-role">
+                <option value="user">Aluna</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="createUser()">Criar acesso</button>
         </div>
-        <div class="field">
-          <label>Perfil</label>
-          <select id="new-role">
-            <option value="user">Aluna</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn-primary" onclick="createUser()">Criar acesso</button>
+      </details>
     </div>
 
     <!-- Lista de usuários -->
@@ -278,6 +309,27 @@
       window.location.href = '/login';
     }
 
+    // ── Link de cadastro ──────────────────────────────────────
+    function initRegLink() {
+      const url = window.location.origin + '/cadastro';
+      document.getElementById('reg-link').value = url;
+    }
+
+    function copyRegLink() {
+      const input = document.getElementById('reg-link');
+      navigator.clipboard.writeText(input.value).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copiado!';
+        showToast('Link copiado para a área de transferência!');
+        setTimeout(() => { btn.textContent = 'Copiar link'; }, 2000);
+      }).catch(() => {
+        input.select();
+        document.execCommand('copy');
+        showToast('Link copiado!');
+      });
+    }
+
+    initRegLink();
     loadUsers();
   </script>
 </body>

@@ -418,9 +418,18 @@
     document.getElementById('logoutBtn').addEventListener('click', logout);
     document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
 
-    // Show admin link if admin
+    // Pré-preenche dados do usuário logado + mostra link de admin
     fetch('/me').then(r => r.ok ? r.json() : null).then(u => {
-      if (u && u.role === 'admin') {
+      if (!u) return;
+
+      // Preenche nome e e-mail no formulário de plano
+      const nomeField  = document.getElementById('nome');
+      const emailField = document.getElementById('email');
+      if (u.name  && nomeField  && !nomeField.value)  nomeField.value  = u.name;
+      if (u.email && emailField && !emailField.value) emailField.value = u.email;
+
+      // Exibe link de admin se for admin
+      if (u.role === 'admin') {
         document.getElementById('adminNavWrap').removeAttribute('hidden');
         document.getElementById('adminMobileWrap').removeAttribute('hidden');
       }

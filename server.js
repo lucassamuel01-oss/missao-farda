@@ -147,7 +147,7 @@ function seedAdminUser() {
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
 
-const PUBLIC_PATHS = ["/login", "/logout", "/health", "/curso"];
+const PUBLIC_PATHS = ["/login", "/logout", "/health", "/curso", "/cadastro"];
 const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf)$/;
 
 function requireAuth(req, res, next) {
@@ -203,6 +203,60 @@ app.use(
 app.get("/login", (req, res) => {
   if (req.session.userId) return res.redirect("/");
   res.sendFile(path.join(PUBLIC_DIR, "login.html"));
+});
+
+// ── Cadastro (auto-registro) ───────────────────────────────────────────────────
+app.get("/cadastro", (req, res) => {
+  if (req.session.userId) return res.redirect("/");
+  res.sendFile(path.join(PUBLIC_DIR, "cadastro.html"));
+});
+
+app.post("/cadastro", async (req, res) => {
+  const name  = String(req.body.name  || "").trim();
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password        = String(req.body.password        || "");
+  const confirmPassword = String(req.body.confirmPassword || "");
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: "Preencha todos os campos obrigatórios." });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ success: false, message: "A senha deve ter no mínimo 6 caracteres." });
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).json({ success: false, message: "As senhas não coincidem." });
+  }
+
+  const users = readUsers();
+  if (users.find((u) => u.email.toLowerCase() === email)) {
+    return res.status(409).json({ success: false, message: "Este e-mail já possui cadastro. Faça login." });
+  }
+
+  const hash = bcrypt.hashSync(password, 10);
+
+  // Expiração padrão: DEFAULT_ACCESS_DAYS dias (env). 0 = sem limite.
+  const defaultDays = parseInt(process.env.DEFAULT_ACCESS_DAYS ?? "365", 10);
+  const expiresAt = defaultDays > 0
+    ? new Date(Date.now() + defaultDays * 24 * 60 * 60 * 1000).toISOString()
+    : null;
+
+  const newUser = {
+    id: crypto.randomUUID(),
+    name,
+    email,
+    password: hash,
+    role: "user",
+    active: true,
+    expiresAt,
+    createdAt: new Date().toISOString(),
+  };
+
+  users.push(newUser);
+  writeUsers(users);
+
+  // Loga automaticamente após o cadastro
+  req.session.userId = newUser.id;
+  return res.json({ success: true, redirect: "/" });
 });
 
 app.post("/login", (req, res) => {
