@@ -113,6 +113,118 @@
       font-size: 12px;
     }
 
+    /* ── Quadro de Avisos ─────────────── */
+    .avisos-board {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+
+    .aviso-card {
+      position: relative;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: 14px;
+      background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
+      transition: var(--transition);
+    }
+
+    .aviso-card:hover { border-color: var(--line-strong); border-left-width: 4px; }
+
+    .aviso-card.cat-aula     { border-left-color: #f87171; }
+    .aviso-card.cat-concurso { border-left-color: #60a5fa; }
+    .aviso-card.cat-edital   { border-left-color: var(--gold); }
+    .aviso-card.cat-aviso    { border-left-color: #34d399; }
+
+    .aviso-card.fixado {
+      border-color: rgba(217,168,78,.45);
+      background: linear-gradient(145deg, rgba(40,32,16,.55), rgba(10,12,11,.95));
+    }
+
+    .aviso-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .aviso-pill {
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .aviso-pill.cat-aula     { background: rgba(248,113,113,.16); color: #fca5a5; border: 1px solid rgba(248,113,113,.35); }
+    .aviso-pill.cat-concurso { background: rgba(96,165,250,.16);  color: #93c5fd; border: 1px solid rgba(96,165,250,.35); }
+    .aviso-pill.cat-edital   { background: rgba(217,168,78,.16);  color: var(--gold-2); border: 1px solid rgba(217,168,78,.35); }
+    .aviso-pill.cat-aviso    { background: rgba(52,211,153,.16);  color: #6ee7b7; border: 1px solid rgba(52,211,153,.35); }
+
+    .aviso-fixado-tag { font-size: 11px; color: var(--gold-2); font-weight: 800; }
+    .aviso-data { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+    .aviso-card h3 {
+      font-family: Georgia, serif;
+      font-size: 18px;
+      color: var(--gold-3);
+      margin: 0 0 6px;
+      line-height: 1.3;
+    }
+
+    .aviso-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    .aviso-evento {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: rgba(248,113,113,.1);
+      border: 1px solid rgba(248,113,113,.25);
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .aviso-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 12px;
+      margin-right: 10px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      color: #16110a;
+      font-weight: 900;
+      font-size: 13px;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .aviso-link:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+    .avisos-empty {
+      padding: 26px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
     /* ── Section header ───────────────── */
     .section-header {
       display: flex;
@@ -332,7 +444,7 @@
     <nav id="mainNav">
       <a href="/#materiais">Materiais</a>
       <a href="/#plano">Gerar plano</a>
-      <a href="/#dicas">Dicas</a>
+      <a href="/blog">Blog</a>
       <a href="/minha-area" class="nav-highlight">Minha Área</a>
       <a href="/curso">Curso completo</a>
       <span id="adminNavLink" hidden><a href="/admin">Admin</a></span>
@@ -353,7 +465,7 @@
     </div>
     <a href="/#materiais">Materiais</a>
     <a href="/#plano">Gerar plano</a>
-    <a href="/#dicas">Dicas do edital</a>
+    <a href="/blog">Blog</a>
     <a href="/minha-area" class="active">Minha Área</a>
     <a href="/curso">Curso completo</a>
     <span id="adminMobileLink" hidden><a href="/admin">Admin</a></span>
@@ -390,6 +502,20 @@
         <span class="quick-icon">📚</span>
         <div><b>Curso completo</b><small>Aulas, questões e simulados</small></div>
       </a>
+      <a href="/blog" class="quick-card">
+        <span class="quick-icon">📰</span>
+        <div><b>Blog da Missão</b><small>Dicas, metodologia e notícias</small></div>
+      </a>
+    </div>
+
+    <!-- Quadro de Avisos -->
+    <div class="section-header" id="avisos">
+      <h2>📣 Quadro de Avisos</h2>
+      <span>Aulas ao vivo · concursos · editais</span>
+    </div>
+
+    <div class="avisos-board" id="avisosBoard">
+      <div class="avisos-empty">Carregando avisos...</div>
     </div>
 
     <!-- PDF Materials -->
@@ -533,6 +659,62 @@
       } catch { window.location.href = '/login'; }
     }
 
+    // ── Quadro de Avisos ──────────────────────────────────────
+    const AVISO_CAT = {
+      aula:     { label: '🔴 Aula ao Vivo' },
+      concurso: { label: '📰 Concurso' },
+      edital:   { label: '📜 Edital' },
+      aviso:    { label: '📢 Comunicado' },
+    };
+
+    function escAviso(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    }
+
+    function fmtEvento(iso) {
+      const d = new Date(iso);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' })
+        + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function loadAvisos() {
+      const board = document.getElementById('avisosBoard');
+      try {
+        const res = await fetch('/avisos');
+        if (!res.ok) throw new Error();
+        const avisos = await res.json();
+
+        if (!avisos.length) {
+          board.innerHTML = '<div class="avisos-empty">Nenhum aviso por enquanto. Quando houver aula ao vivo ou novidade de concurso, ela aparece aqui. 👀</div>';
+          return;
+        }
+
+        board.innerHTML = avisos.map(a => {
+          const cat = AVISO_CAT[a.categoria] || AVISO_CAT.aviso;
+          const evento = a.dataEvento
+            ? `<div class="aviso-evento">🗓️ ${fmtEvento(a.dataEvento)}</div>` : '';
+          const link = a.link
+            ? `<a class="aviso-link" href="${escAviso(a.link)}" target="_blank" rel="noopener">${a.categoria === 'aula' ? '▶ Entrar na aula' : '↗ Acessar'}</a>` : '';
+          const fixado = a.fixado ? '<span class="aviso-fixado-tag">📌 Fixado</span>' : '';
+          const publicado = new Date(a.createdAt).toLocaleDateString('pt-BR');
+
+          return `<div class="aviso-card cat-${escAviso(a.categoria)}${a.fixado ? ' fixado' : ''}">
+            <div class="aviso-top">
+              <span class="aviso-pill cat-${escAviso(a.categoria)}">${cat.label}</span>
+              ${fixado}
+              <span class="aviso-data">${publicado}</span>
+            </div>
+            <h3>${escAviso(a.titulo)}</h3>
+            <p>${escAviso(a.mensagem)}</p>
+            ${evento}${link}
+          </div>`;
+        }).join('');
+      } catch {
+        board.innerHTML = '<div class="avisos-empty">Não foi possível carregar os avisos agora.</div>';
+      }
+    }
+
     // ── Logout ────────────────────────────────────────────────
     async function logout() {
       await fetch('/logout', { method: 'POST' });
@@ -566,6 +748,7 @@
     overlay.addEventListener('click', closeMenu);
 
     loadMe();
+    loadAvisos();
   </script>
 </body>
 </html>

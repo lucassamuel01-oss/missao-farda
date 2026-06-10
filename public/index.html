@@ -22,6 +22,7 @@
       <a href="#plano">Gerar plano</a>
       <a href="#materiais">Materiais</a>
       <a href="#dicas">Dicas do edital</a>
+      <a href="/blog">Blog</a>
       <a href="/minha-area" class="nav-highlight">Minha Área</a>
       <a href="/curso">Curso completo</a>
       <span id="adminNavWrap" hidden><a href="/admin">Admin</a></span>
@@ -43,6 +44,7 @@
     <a href="#plano">Gerar plano</a>
     <a href="#materiais">Materiais</a>
     <a href="#dicas">Dicas do edital</a>
+    <a href="/blog">Blog</a>
     <a href="/minha-area">Minha Área</a>
     <a href="/curso">Curso completo</a>
     <span id="adminMobileWrap" hidden><a href="/admin">Admin</a></span>
@@ -390,6 +392,20 @@
         <a href="/curso" class="submit-btn mini-cta">Comprar curso completo</a>
       </div>
     </section>
+
+    <section id="blog" class="tips-section" aria-labelledby="blog-title">
+      <div class="section-title">
+        <p class="eyebrow">Conteúdo estratégico</p>
+        <h2 id="blog-title">Blog da Missão</h2>
+        <p>Dicas, metodologia de estudos, redação, TAF e o radar de concursos e editais.</p>
+      </div>
+
+      <div class="tips-grid" id="blogPreview"><!-- JS-rendered --></div>
+
+      <div style="text-align:center;margin-top:26px">
+        <a href="/blog" class="ghost-btn">Ver todos os artigos →</a>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -398,7 +414,25 @@
   </footer>
 
   <script src="/script.js"></script>
+  <script src="/blog-data.js"></script>
   <script>
+    // Prévia do blog — 3 artigos mais recentes
+    (function renderBlogPreview() {
+      const box = document.getElementById('blogPreview');
+      if (!box || !window.BLOG_POSTS) return;
+      const posts = window.BLOG_POSTS.slice()
+        .sort((a, b) => new Date(b.data) - new Date(a.data))
+        .slice(0, 3);
+      box.innerHTML = posts.map(p => `
+        <article class="glass tip-card" style="cursor:pointer" onclick="location.href='/blog#${p.id}'">
+          <span>${p.tag.replace(/^[^ ]+ /, '')}</span>
+          <h3>${p.titulo}</h3>
+          <p>${p.resumo}</p>
+          <p style="margin-top:10px"><b style="color:var(--gold-2)">Ler artigo →</b></p>
+        </article>
+      `).join('');
+    })();
+
     // Hamburger menu
     const hamburger = document.getElementById('hamburgerBtn');
     const mobileNav = document.getElementById('mobileNav');

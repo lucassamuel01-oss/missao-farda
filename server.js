@@ -18,6 +18,7 @@ const LEADS_JSON = path.join(DATA_DIR, "leads.json");
 const LEADS_CSV = path.join(DATA_DIR, "leads.csv");
 const USERS_JSON   = path.join(DATA_DIR, "users.json");
 const INVITES_JSON = path.join(DATA_DIR, "invites.json");
+const AVISOS_JSON  = path.join(DATA_DIR, "avisos.json");
 const SESSION_SECRET_FILE = path.join(DATA_DIR, "session-secret.txt");
 
 app.disable("x-powered-by");
@@ -58,6 +59,7 @@ const MONGODB_URI = process.env.MONGODB_URI || null;
 let _mongoDb      = null;   // conexão ativa
 let _usersCache   = null;   // null = ainda não carregado
 let _invitesCache = [];     // convites únicos por aluna
+let _avisosCache  = [];     // quadro de avisos publicado pelo admin
 
 async function connectMongo() {
   if (!MONGODB_URI) return null;
@@ -148,6 +150,47 @@ async function loadInvitesFromStorage() {
   if (!fs.existsSync(INVITES_JSON)) return [];
   try {
     const raw = fs.readFileSync(INVITES_JSON, "utf8").trim();
+    const parsed = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch { return []; }
+}
+
+// ── Quadro de Avisos ──────────────────────────────────────────────────────────
+
+function readAvisos() {
+  return _avisosCache;
+}
+
+function writeAvisos(avisos) {
+  _avisosCache = avisos;
+  if (_mongoDb) {
+    _mongoDb.collection("app_data")
+      .replaceOne({ _id: "avisos" }, { _id: "avisos", avisos }, { upsert: true })
+      .catch((err) => console.error("[DB] Erro ao salvar avisos:", err.message));
+  } else {
+    try {
+      ensureDirectories();
+      fs.writeFileSync(AVISOS_JSON, JSON.stringify(avisos, null, 2), "utf8");
+    } catch (err) {
+      console.error("[DB] Erro ao salvar avisos.json:", err.message);
+    }
+  }
+}
+
+async function loadAvisosFromStorage() {
+  if (_mongoDb) {
+    try {
+      const doc = await _mongoDb.collection("app_data").findOne({ _id: "avisos" });
+      const list = doc && Array.isArray(doc.avisos) ? doc.avisos : [];
+      console.log(`[DB] ${list.length} aviso(s) carregado(s)`);
+      return list;
+    } catch (err) {
+      console.error("[DB] Erro ao carregar avisos:", err.message);
+    }
+  }
+  if (!fs.existsSync(AVISOS_JSON)) return [];
+  try {
+    const raw = fs.readFileSync(AVISOS_JSON, "utf8").trim();
     const parsed = JSON.parse(raw || "[]");
     return Array.isArray(parsed) ? parsed : [];
   } catch { return []; }
@@ -387,6 +430,10 @@ app.get("/minha-area", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "minha-area.html"));
 });
 
+app.get("/blog", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "blog.html"));
+});
+
 // ── Admin panel ───────────────────────────────────────────────────────────────
 
 app.get("/admin", requireAdmin, (req, res) => {
@@ -431,6 +478,63 @@ app.delete("/admin/invites/:id", requireAdmin, (req, res) => {
     return res.status(404).json({ success: false, message: "Convite não encontrado." });
   }
   writeInvites(filtered);
+  res.json({ success: true });
+});
+
+// ── Rotas do Quadro de Avisos ─────────────────────────────────────────────────
+
+const AVISO_CATEGORIAS = ["aula", "concurso", "edital", "aviso"];
+
+// Alunas: lista avisos (fixados primeiro, depois mais recentes)
+app.get("/avisos", (req, res) => {
+  const avisos = readAvisos()
+    .slice()
+    .sort((a, b) => {
+      if (!!b.fixado !== !!a.fixado) return b.fixado ? 1 : -1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  res.json(avisos);
+});
+
+// Admin: publicar aviso
+app.post("/admin/avisos", requireAdmin, (req, res) => {
+  const titulo    = String(req.body.titulo   || "").trim().slice(0, 120);
+  const mensagem  = String(req.body.mensagem || "").trim().slice(0, 2000);
+  const categoria = AVISO_CATEGORIAS.includes(req.body.categoria) ? req.body.categoria : "aviso";
+  const rawLink   = String(req.body.link || "").trim();
+  const link      = /^https?:\/\//i.test(rawLink) ? rawLink : null;
+  const dataEvento = req.body.dataEvento || null;
+  const fixado     = !!req.body.fixado;
+
+  if (!titulo || !mensagem) {
+    return res.status(400).json({ success: false, message: "Título e mensagem são obrigatórios." });
+  }
+
+  const aviso = {
+    id: crypto.randomUUID(),
+    titulo,
+    mensagem,
+    categoria,
+    link,
+    dataEvento,
+    fixado,
+    createdAt: new Date().toISOString(),
+  };
+
+  const avisos = readAvisos();
+  avisos.push(aviso);
+  writeAvisos(avisos);
+  res.json({ success: true, aviso });
+});
+
+// Admin: excluir aviso
+app.delete("/admin/avisos/:id", requireAdmin, (req, res) => {
+  const avisos = readAvisos();
+  const filtered = avisos.filter((a) => a.id !== req.params.id);
+  if (filtered.length === avisos.length) {
+    return res.status(404).json({ success: false, message: "Aviso não encontrado." });
+  }
+  writeAvisos(filtered);
   res.json({ success: true });
 });
 
@@ -2126,6 +2230,7 @@ app.use((req, res) => {
   // 2. Carrega dados persistentes na memória
   _usersCache   = await loadUsersFromStorage();
   _invitesCache = await loadInvitesFromStorage();
+  _avisosCache  = await loadAvisosFromStorage();
 
   // 3. Garante que existe pelo menos um admin
   seedAdminUser();

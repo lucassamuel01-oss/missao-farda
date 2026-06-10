@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Blog da Missão — dicas, metodologia de estudos, notícias de concursos e editais para a sua preparação PMBA." />
+  <title>Blog da Missão — Elite Feminina Missão Farda</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .blog-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    .blog-hero { text-align: center; margin-bottom: 36px; }
+    .blog-hero h1 {
+      font-size: clamp(28px, 4.5vw, 44px);
+      margin: 8px 0 12px;
+      line-height: 1.1;
+    }
+    .blog-hero p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* ── Filtros ───────────────────────── */
+    .blog-filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 34px;
+    }
+    .blog-filters button {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .blog-filters button:hover { border-color: var(--gold); color: var(--gold-3); }
+    .blog-filters button.active {
+      background: linear-gradient(135deg, var(--gold-3), var(--gold));
+      border-color: transparent;
+      color: #16110a;
+    }
+
+    /* ── Grid de posts ─────────────────── */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .post-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .post-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    .post-tag {
+      width: max-content;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      background: rgba(217,168,78,.16);
+      color: var(--gold-2);
+      border: 1px solid rgba(217,168,78,.32);
+    }
+    .post-card h3 {
+      font-family: Georgia, serif;
+      font-size: 19px;
+      color: var(--gold-3);
+      line-height: 1.3;
+      margin: 0;
+    }
+    .post-card p { flex: 1; color: var(--muted); font-size: 13.5px; line-height: 1.65; margin: 0; }
+    .post-meta { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+    .post-cta { color: var(--gold-2); font-weight: 800; font-size: 13px; }
+
+    /* ── Leitura do artigo ─────────────── */
+    #articleView { display: none; max-width: 760px; margin: 0 auto; }
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--gold-3);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .article-back:hover { border-color: var(--gold); }
+    .article-head { margin-bottom: 26px; }
+    .article-head h1 {
+      font-size: clamp(24px, 3.6vw, 36px);
+      line-height: 1.2;
+      margin: 14px 0 12px;
+    }
+    .article-body {
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(18,22,20,.9), rgba(10,12,11,.95));
+    }
+    .article-body p { color: #e7e1d3; font-size: 15px; line-height: 1.85; margin: 0 0 16px; }
+    .article-body h3 {
+      font-family: Georgia, serif;
+      color: var(--gold-3);
+      font-size: 20px;
+      margin: 26px 0 12px;
+    }
+    .article-body ul { margin: 0 0 16px 4px; padding-left: 18px; }
+    .article-body li { color: #e7e1d3; font-size: 14.5px; line-height: 1.75; margin-bottom: 8px; }
+    .article-body strong { color: var(--gold-2); }
+    .article-body em { color: var(--muted); }
+    .article-footer-cta {
+      margin-top: 30px;
+      padding: 22px;
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+      background: rgba(217,168,78,.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .article-footer-cta b { color: var(--gold-3); font-size: 15px; }
+    .article-footer-cta small { display: block; color: var(--muted); margin-top: 4px; }
+
+    .posts-empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="crest">✦</span>
+      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
+    </a>
+
+    <nav id="mainNav">
+      <a href="/#plano">Gerar plano</a>
+      <a href="/#materiais">Materiais</a>
+      <a href="/blog" class="nav-highlight">Blog</a>
+      <a href="/minha-area">Minha Área</a>
+      <a href="/curso">Curso completo</a>
+      <span id="adminNavWrap" hidden><a href="/admin">Admin</a></span>
+      <button type="button" class="logout-link" id="logoutBtn">Sair</button>
+    </nav>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div class="mobile-nav-overlay" id="mobileOverlay"></div>
+  <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <div class="mobile-nav-header">
+      <span class="crest" style="width:38px;height:38px;font-size:18px;">✦</span>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
+    </div>
+    <a href="/#plano">Gerar plano</a>
+    <a href="/#materiais">Materiais</a>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/minha-area">Minha Área</a>
+    <a href="/curso">Curso completo</a>
+    <span id="adminMobileWrap" hidden><a href="/admin">Admin</a></span>
+    <button type="button" class="mobile-logout" id="mobileLogoutBtn">Sair da conta</button>
+  </nav>
+
+  <main class="blog-wrap">
+
+    <!-- Lista de artigos -->
+    <div id="listView">
+      <div class="blog-hero">
+        <p class="eyebrow">Conteúdo estratégico para a sua aprovação</p>
+        <h1>Blog da <span style="color:var(--gold-2)">Missão</span></h1>
+        <p>Dicas práticas, metodologia de estudos, redação, preparação física e o radar de concursos e editais — tudo pensado para a sua jornada rumo à farda.</p>
+      </div>
+
+      <div class="blog-filters" id="blogFilters" role="group" aria-label="Filtrar artigos por categoria">
+        <button data-cat="todos" class="active">Todos</button>
+        <button data-cat="metodologia">📊 Metodologia</button>
+        <button data-cat="questoes">🎯 Questões</button>
+        <button data-cat="redacao">✍️ Redação</button>
+        <button data-cat="taf">💪 TAF</button>
+        <button data-cat="noticias">📰 Concursos & Editais</button>
+      </div>
+
+      <div class="posts-grid" id="postsGrid"></div>
+      <p class="posts-empty" id="postsEmpty" hidden>Nenhum artigo nesta categoria ainda.</p>
+    </div>
+
+    <!-- Leitura de artigo -->
+    <article id="articleView">
+      <button type="button" class="article-back" id="articleBack">← Voltar para o blog</button>
+      <div class="article-head">
+        <span class="post-tag" id="articleTag"></span>
+        <h1 id="articleTitle"></h1>
+        <div class="post-meta" id="articleMeta"></div>
+      </div>
+      <div class="article-body" id="articleBody"></div>
+      <div class="article-footer-cta">
+        <div>
+          <b>Pronta para colocar em prática?</b>
+          <small>Gere seu plano de estudos Pomodoro personalizado por edital e dificuldade.</small>
+        </div>
+        <a href="/#plano" class="submit-btn" style="white-space:nowrap">🚀 Gerar meu plano</a>
+      </div>
+    </article>
+
+  </main>
+
+  <footer>
+    <strong>ELITE FEMININA — MISSÃO FARDA</strong>
+    <span>A farda é pesada, mas a honra é maior ainda.</span>
+  </footer>
+
+  <script src="/blog-data.js"></script>
+  <script>
+    const POSTS = (window.BLOG_POSTS || []).slice()
+      .sort((a, b) => new Date(b.data) - new Date(a.data));
+
+    const fmtData = iso => new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    /* ── Render da lista ───────────────────────────── */
+    let currentCat = 'todos';
+
+    function renderList() {
+      const grid  = document.getElementById('postsGrid');
+      const posts = currentCat === 'todos' ? POSTS : POSTS.filter(p => p.categoria === currentCat);
+      document.getElementById('postsEmpty').hidden = posts.length > 0;
+
+      grid.innerHTML = posts.map(p => `
+        <div class="post-card" onclick="openPost('${p.id}')" role="button" tabindex="0" aria-label="Ler artigo: ${p.titulo}">
+          <span class="post-tag">${p.tag}</span>
+          <h3>${p.titulo}</h3>
+          <p>${p.resumo}</p>
+          <div class="post-meta">${fmtData(p.data)} · ${p.tempo} min de leitura</div>
+          <span class="post-cta">Ler artigo →</span>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.post-card').forEach(card => {
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
+      });
+    }
+
+    /* ── Filtros ───────────────────────────────────── */
+    document.getElementById('blogFilters').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-cat]');
+      if (!btn) return;
+      currentCat = btn.dataset.cat;
+      document.querySelectorAll('#blogFilters button').forEach(b => b.classList.toggle('active', b === btn));
+      renderList();
+    });
+
+    /* ── Leitura de artigo (deep-link via hash) ────── */
+    function openPost(id, push = true) {
+      const post = POSTS.find(p => p.id === id);
+      if (!post) return;
+
+      document.getElementById('articleTag').textContent   = post.tag;
+      document.getElementById('articleTitle').textContent = post.titulo;
+      document.getElementById('articleMeta').textContent  = `${fmtData(post.data)} · ${post.tempo} min de leitura`;
+      document.getElementById('articleBody').innerHTML    = post.conteudo;
+
+      document.getElementById('listView').style.display    = 'none';
+      document.getElementById('articleView').style.display = 'block';
+      document.title = `${post.titulo} — Blog da Missão`;
+      if (push) history.pushState({ post: id }, '', '#' + id);
+      window.scrollTo({ top: 0 });
+    }
+
+    function closePost(push = true) {
+      document.getElementById('articleView').style.display = 'none';
+      document.getElementById('listView').style.display    = 'block';
+      document.title = 'Blog da Missão — Elite Feminina Missão Farda';
+      if (push) history.pushState({}, '', location.pathname);
+    }
+
+    document.getElementById('articleBack').addEventListener('click', () => closePost());
+    window.addEventListener('popstate', () => {
+      const id = location.hash.replace('#', '');
+      if (id && POSTS.some(p => p.id === id)) openPost(id, false);
+      else closePost(false);
+    });
+
+    /* ── Boot ──────────────────────────────────────── */
+    renderList();
+    const initial = location.hash.replace('#', '');
+    if (initial && POSTS.some(p => p.id === initial)) openPost(initial, false);
+
+    /* ── Nav comum (hamburger, logout, admin link) ── */
+    const hamburger = document.getElementById('hamburgerBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const overlay   = document.getElementById('mobileOverlay');
+    const closeBtn  = document.getElementById('mobileNavClose');
+
+    function openMenu()  { mobileNav.classList.add('open'); overlay.classList.add('show'); hamburger.setAttribute('aria-expanded','true'); mobileNav.setAttribute('aria-hidden','false'); }
+    function closeMenu() { mobileNav.classList.remove('open'); overlay.classList.remove('show'); hamburger.setAttribute('aria-expanded','false'); mobileNav.setAttribute('aria-hidden','true'); }
+
+    hamburger.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    async function logout() { await fetch('/logout', { method: 'POST' }); window.location.href = '/login'; }
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('mobileLogoutBtn').addEventListener('click', logout);
+
+    fetch('/me').then(r => r.ok ? r.json() : null).then(u => {
+      if (u && u.role === 'admin') {
+        document.getElementById('adminNavWrap').removeAttribute('hidden');
+        document.getElementById('adminMobileWrap').removeAttribute('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
