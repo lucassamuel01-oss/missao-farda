@@ -114,12 +114,17 @@
 
       <!-- Link gerado -->
       <div id="invite-result" style="display:none;margin-top:18px;padding:16px;border-radius:12px;border:1px solid rgba(217,168,78,.35);background:rgba(217,168,78,.07);">
-        <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold,#d9a84e);margin-bottom:8px;">Link gerado ✓</p>
+        <p style="font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold,#d9a84e);margin-bottom:8px;">Link gerado — copie e envie pelo WhatsApp ✓</p>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
           <input type="text" id="invite-url" readonly
             style="flex:1;min-width:180px;padding:10px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.3);color:#f6f1e7;font-size:.85rem;" />
           <button class="btn-primary" onclick="copyInviteUrl()" style="white-space:nowrap;padding:10px 18px;">Copiar</button>
         </div>
+        <p style="margin-top:10px;font-size:.78rem;color:var(--muted,#aaa);line-height:1.5;">
+          Para testar o link você mesmo, abra uma
+          <strong style="color:#f6f1e7;">aba anônima / privada</strong> — enquanto você estiver logado no painel,
+          o link vai te redirecionar automaticamente para o painel.
+        </p>
       </div>
     </div>
 

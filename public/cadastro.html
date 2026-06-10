@@ -397,31 +397,19 @@
   </main>
 
   <script>
-    // ── Validar token de convite ───────────────────────────────
+    // ── Ler token de convite da URL ────────────────────────────
+    // O servidor já validou o token no GET /cadastro antes de servir esta página.
+    // Se chegou aqui, o token é válido. Apenas lemos e guardamos no campo oculto.
     (function initInvite() {
-      const params = new URLSearchParams(window.location.search);
-      const token  = params.get('convite');
+      const token = new URLSearchParams(window.location.search).get('convite');
 
       if (!token) {
-        // Nenhum token na URL — mostrar estado de erro
-        document.getElementById('form-wrap').style.display    = 'none';
+        document.getElementById('form-wrap').style.display     = 'none';
         document.getElementById('invalid-invite').style.display = 'block';
         return;
       }
 
-      // Token presente: configurar campo oculto e validar no servidor
       document.getElementById('token-field').value = token;
-
-      // Validação antecipada (opcional, evita preencher o form com token inválido)
-      fetch('/cadastro?convite=' + encodeURIComponent(token), { method: 'HEAD' })
-        .then(r => {
-          if (r.redirected || r.status >= 300) {
-            // Redirecionou para /login?erro=... → token inválido
-            document.getElementById('form-wrap').style.display    = 'none';
-            document.getElementById('invalid-invite').style.display = 'block';
-          }
-        })
-        .catch(() => {}); // Falha silenciosa — deixar o submit revelar o erro
     })();
 
     // ── Envio do formulário ────────────────────────────────────
