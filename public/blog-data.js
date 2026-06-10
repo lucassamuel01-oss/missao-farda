@@ -51,7 +51,7 @@ window.BLOG_POSTS = [
         <li><strong>Alternativas gêmeas:</strong> quando duas opções são quase idênticas, a resposta costuma estar entre elas. Foque na diferença textual exata.</li>
       </ul>
       <h3>Depois da questão, o ouro: a autoexplicação</h3>
-      <p>Acertar não basta. Para cada questão, explique para si mesma <strong>por que cada alternativa errada está errada</strong> e onde a banca tentou te derrubar. Esse hábito constrói o "olho treinado" que diferencia quem passa de quem quase passa.</p>
+      <p>Acertar não basta. Para cada questão, explique com suas próprias palavras <strong>por que cada alternativa errada está errada</strong> e onde a banca tentou te derrubar. Esse hábito constrói o "olho treinado" que diferencia quem passa de quem quase passa.</p>
     `,
   },
   {
@@ -81,22 +81,30 @@ window.BLOG_POSTS = [
     `,
   },
   {
-    id: 'taf-feminino-pmba-treino',
+    id: 'taf-pmba-treino',
     categoria: 'taf',
     tag: '💪 TAF',
-    titulo: 'TAF feminino da PMBA: por que começar a treinar antes da aprovação',
-    resumo: 'O TAF é eliminatório — e condicionamento físico não se constrói em duas semanas. Conheça os índices exigidos e a lógica da progressão segura.',
+    titulo: 'TAF da PMBA: por que começar a treinar antes da aprovação',
+    resumo: 'O TAF é eliminatório — e condicionamento físico não se constrói em duas semanas. Conheça os índices exigidos para homens e mulheres e a lógica da progressão segura.',
     data: '2026-05-28',
     tempo: 5,
     conteudo: `
-      <p>Muita candidata trata o Teste de Aptidão Física como um problema para "depois da objetiva". É um erro que elimina gente bem preparada intelectualmente todos os anos: o condicionamento físico exige <strong>tempo, adaptação progressiva e constância</strong>.</p>
-      <h3>O que o TAF exige das mulheres</h3>
+      <p>Muitos candidatos e candidatas tratam o Teste de Aptidão Física como um problema para "depois da objetiva". É um erro que elimina gente bem preparada intelectualmente todos os anos: o condicionamento físico exige <strong>tempo, adaptação progressiva e constância</strong>.</p>
+      <h3>O que o TAF exige — índices feminino e masculino</h3>
+      <p><strong>Feminino:</strong></p>
       <ul>
         <li><strong>Corrida de velocidade:</strong> 50 metros em até 9,2 segundos.</li>
         <li><strong>Barra fixa:</strong> sustentação isométrica por pelo menos 10 segundos.</li>
         <li><strong>Corrida de resistência:</strong> 2.400 metros em até 15 minutos.</li>
       </ul>
-      <p>Parece simples no papel — mas para quem está sedentária, cada um desses índices é um desafio real. E tentar "correr atrás" em poucas semanas é receita para lesão.</p>
+      <p><strong>Masculino:</strong></p>
+      <ul>
+        <li><strong>Corrida de velocidade:</strong> 50 metros em até 8,2 segundos.</li>
+        <li><strong>Barra fixa:</strong> no mínimo 4 flexões dinâmicas (puxadas completas).</li>
+        <li><strong>Corrida de resistência:</strong> 2.400 metros em até 13 minutos.</li>
+      </ul>
+      <p>Esses são os índices praticados nos últimos certames — <strong>confira sempre o edital vigente</strong>, pois os valores podem ser ajustados a cada concurso.</p>
+      <p>Parece simples no papel — mas para quem está no sedentarismo, cada um desses índices é um desafio real. E tentar "correr atrás" em poucas semanas é receita para lesão.</p>
       <h3>A lógica da progressão</h3>
       <p>Treinos eficazes seguem fases: <strong>adaptação</strong> (caminhadas, trotes leves, primeiras tentativas na barra), <strong>evolução</strong> (volume crescente de corrida e séries de força), <strong>intensidade</strong> (ritmos variados e tiros curtos) e <strong>simulação</strong> (executar o teste completo nos padrões da banca, cronometrado).</p>
       <p>Duas regras inegociáveis: <strong>nunca treine tiros de velocidade sem aquecer muito bem</strong>, e reserve dias de descanso total — é no descanso que o corpo evolui.</p>
@@ -114,7 +122,7 @@ window.BLOG_POSTS = [
     data: '2026-05-22',
     tempo: 4,
     conteudo: `
-      <p>Quem nunca passou uma tarde inteira "estudando" e terminou sem lembrar de quase nada? O problema não é falta de esforço — é o formato. A atenção humana se degrada rápido, e estudar exausta gera sensação de progresso sem retenção real.</p>
+      <p>Quem nunca passou uma tarde inteira "estudando" e terminou sem lembrar de quase nada? O problema não é falta de esforço — é o formato. A atenção humana se degrada rápido, e estudar no limite do cansaço gera sensação de progresso sem retenção real.</p>
       <h3>O ciclo que funciona</h3>
       <ul>
         <li><strong>25 minutos de foco total</strong> em uma única tarefa: teoria, questões ou revisão. Celular longe, uma matéria por vez.</li>
@@ -137,7 +145,7 @@ window.BLOG_POSTS = [
     data: '2026-05-15',
     tempo: 5,
     conteudo: `
-      <p>A maioria das candidatas resolve questões, confere o gabarito, comemora os acertos e segue em frente. Estão jogando fora a parte mais valiosa do treino: <strong>o erro é o único feedback que aponta exatamente onde sua preparação está frágil</strong>.</p>
+      <p>A maioria dos candidatos e candidatas resolve questões, confere o gabarito, comemora os acertos e segue em frente. Estão jogando fora a parte mais valiosa do treino: <strong>o erro é o único feedback que aponta exatamente onde sua preparação está frágil</strong>.</p>
       <h3>Como montar o caderno de erros</h3>
       <p>Pode ser um caderno físico, uma planilha ou um app de notas. Para cada questão errada, registre:</p>
       <ul>
@@ -191,7 +199,7 @@ window.BLOG_POSTS = [
     data: '2026-04-30',
     tempo: 5,
     conteudo: `
-      <p>Passar na prova objetiva é a fase mais concorrida — mas não é a última. O concurso da PMBA é um funil com várias etapas eliminatórias, e cada uma derruba candidatas que negligenciaram a preparação completa.</p>
+      <p>Passar na prova objetiva é a fase mais concorrida — mas não é a última. O concurso da PMBA é um funil com várias etapas eliminatórias, e cada uma derruba candidatos e candidatas que negligenciaram a preparação completa.</p>
       <h3>O funil típico do certame</h3>
       <ul>
         <li><strong>Prova objetiva:</strong> conhecimentos gerais e específicos. É o grande filtro inicial.</li>
