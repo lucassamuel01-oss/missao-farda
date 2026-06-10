@@ -430,10 +430,6 @@ app.get("/minha-area", (req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, "minha-area.html"));
 });
 
-app.get("/blog", (req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, "blog.html"));
-});
-
 // ── Admin panel ───────────────────────────────────────────────────────────────
 
 app.get("/admin", requireAdmin, (req, res) => {
