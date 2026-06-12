@@ -33,7 +33,7 @@ http://localhost:3000
 O link do botão de compra fica no arquivo `server.js`:
 
 ```js
-const COURSE_URL = process.env.COURSE_URL || "https://web.concurseiroelitelp.com.br/cursos-do-elite-parceiros-cris-andrade/";
+const COURSE_URL = process.env.COURSE_URL || "https://pay.cakto.com.br/33krayz?affiliate=s7XUk8bn";
 ```
 
 ## Leads

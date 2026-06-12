@@ -66,7 +66,10 @@ async function connectMongo() {
   try {
     const client = new MongoClient(MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
     await client.connect();
-    _mongoDb = client.db("elite-feminina");
+    // O nome legado "elite-feminina" é mantido como padrão porque os dados de
+    // produção (usuárias, convites, avisos) já vivem nesse banco no Atlas.
+    // Para migrar, defina MONGODB_DB e copie os dados antes.
+    _mongoDb = client.db(process.env.MONGODB_DB || "elite-feminina");
     console.log("[DB] MongoDB Atlas conectado ✓");
     return _mongoDb;
   } catch (err) {
@@ -220,7 +223,7 @@ function seedAdminUser() {
   users.push({
     id: crypto.randomUUID(),
     name: "Administrador",
-    email: "admin@elite.com",
+    email: "admin@missaofarda.com",
     password: hash,
     role: "admin",
     active: true,
@@ -228,7 +231,7 @@ function seedAdminUser() {
     createdAt: new Date().toISOString(),
   });
   writeUsers(users);
-  console.log("Admin padrão criado — email: admin@elite.com  senha: admin123");
+  console.log("Admin padrão criado — email: admin@missaofarda.com  senha: admin123");
 }
 
 // ── Auth middleware ───────────────────────────────────────────────────────────
@@ -2107,7 +2110,7 @@ app.get("/curso", (req, res) => {
 });
 
 app.get("/health", (req, res) => {
-  res.json({ ok: true, app: "elite-feminina-missao-farda" });
+  res.json({ ok: true, app: "missao-farda" });
 });
 
 app.get("/leads", (req, res) => {
