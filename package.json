@@ -1,5 +1,5 @@
 {
-  "name": "elite-feminina-missao-farda",
+  "name": "missao-farda",
   "version": "4.2.0",
   "description": "Site para geração de cronograma PMBA com Pomodoro, alternância de matérias e informações do edital",
   "main": "server.js",
@@ -20,7 +20,7 @@
     "estudos",
     "educacao"
   ],
-  "author": "Elite Feminina",
+  "author": "Missão Farda — Cris Andrade",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -1431,8 +1431,8 @@ function renderTopbar(activePage = "") {
   return `
   <header class="topbar">
     <a class="brand" href="/">
-      <span class="crest">✦</span>
-      <span><strong>ELITE FEMININA</strong><small>MISSÃO FARDA</small></span>
+      <span class="crest">MF</span>
+      <span><strong>MISSÃO FARDA</strong><small>CRIS ANDRADE</small></span>
     </a>
     <nav id="mainNav">
       <a href="/#plano">Gerar plano</a>
@@ -1450,7 +1450,7 @@ function renderTopbar(activePage = "") {
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
   <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
     <div class="mobile-nav-header">
-      <span class="crest" style="width:38px;height:38px;font-size:18px;">✦</span>
+      <span class="crest" style="width:38px;height:38px;font-size:14px;">MF</span>
       <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
     </div>
     <a href="/#plano">Gerar plano</a>
@@ -1493,7 +1493,7 @@ function renderCursoPage() {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preparatório PMBA — Manual do Mike · Elite Feminina</title>
+  <title>Preparatório PMBA — Manual do Mike · Missão Farda</title>
   <link rel="stylesheet" href="/styles.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1734,7 +1734,7 @@ function renderCursoPage() {
         base no que realmente cai na prova — da teoria às questões, da redação à estratégia.
       </p>
       <p class="mk-lead" style="margin-top:14px;">
-        Combinado com a <strong style="color:var(--gold-3)">plataforma Elite Feminina</strong>,
+        Combinado com a <strong style="color:var(--gold-3)">plataforma Missão Farda</strong>,
         que gera seu cronograma Pomodoro personalizado, você terá uma preparação completa e
         inteligente do zero à aprovação.
       </p>
@@ -1873,7 +1873,7 @@ function renderCursoPage() {
       GARANTIR MINHA APROVAÇÃO →
     </a>
     <div class="mk-coupon-chip">
-      <small>Cupom exclusivo Elite Feminina</small>
+      <small>Cupom exclusivo Missão Farda</small>
       <strong>Cris15</strong>
       <span>↑ Copie e cole no checkout</span>
     </div>
@@ -1882,7 +1882,7 @@ function renderCursoPage() {
   </div><!-- /mike -->
 
   <footer class="mk-foot">
-    <strong>ELITE FEMININA — MISSÃO FARDA</strong>
+    <strong>MISSÃO FARDA — CRIS ANDRADE</strong>
     <a href="/">← Voltar à plataforma</a>
   </footer>
 
@@ -1971,7 +1971,7 @@ function renderPlanoPage(dados, plano) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plano gerado — Elite Feminina Missão Farda</title>
+  <title>Plano gerado — Missão Farda</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="result-page">
@@ -1982,7 +1982,7 @@ function renderPlanoPage(dados, plano) {
 
   <main class="result-wrap">
     <section class="pdf-cover glass">
-      <p class="eyebrow">Elite Feminina — Missão Farda</p>
+      <p class="eyebrow">Missão Farda — Cris Andrade</p>
       <h1>Plano de Estudos Personalizado</h1>
       <div class="pdf-meta-grid">
         <div><span>Aluna</span><strong>${escapeHtml(dados.nome || "Não informado")}</strong></div>
@@ -2233,6 +2233,6 @@ app.use((req, res) => {
 
   // 4. Inicia o servidor
   app.listen(PORT, () => {
-    console.log(`Elite Feminina Missão Farda rodando em http://localhost:${PORT}`);
+    console.log(`Missão Farda rodando em http://localhost:${PORT}`);
   });
 })();

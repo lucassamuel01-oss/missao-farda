@@ -183,7 +183,10 @@ a{
 
   color:var(--gold);
 
-  font-size:24px;
+  font-family:Georgia, serif;
+  font-size:19px;
+  font-weight:700;
+  letter-spacing:1px;
   line-height:1;
 
   background:
@@ -460,20 +463,49 @@ h1 span{
   line-height:1.5;
 }
 
+/* Valores da marca — Honra · Coragem · Compromisso · Foco */
+.values-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px 24px;
+
+  margin-top:26px;
+  padding-top:22px;
+  border-top:1px solid var(--line);
+}
+
+.values-strip span{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  font-family:Georgia, serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--gold-2);
+}
+
+.values-strip span::before{
+  content:"★";
+  font-size:11px;
+  color:var(--gold);
+}
+
 .hero-photo{
   position:relative;
   min-height:650px;
   overflow:hidden;
 
   border-radius:var(--radius);
+  border:1px solid var(--line);
 
   background:
-    linear-gradient(to bottom, transparent 58%, rgba(7,8,7,.92)),
-    linear-gradient(to right, rgba(7,8,7,.8), transparent 30%, rgba(7,8,7,.75)),
-    url('/assets/hero-2.jpeg') center/cover;
+    url('/assets/brand-missao-farda.png') center/contain no-repeat,
+    #050706;
 
   box-shadow:var(--shadow-lg);
-  filter:contrast(1.06) saturate(.95);
 }
 
 .hero-photo::after{
@@ -1680,7 +1712,7 @@ details p{
   }
 
   .hero-photo{
-    min-height:420px;
+    min-height:540px;
     order:-1;
   }
 
@@ -1819,7 +1851,7 @@ details p{
   .crest{
     width:46px;
     height:46px;
-    font-size:22px;
+    font-size:17px;
   }
 
   h1{

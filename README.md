@@ -1,4 +1,4 @@
-# Elite Feminina — Missão Farda v6
+# Missão Farda — Cris Andrade
 
 Versão refinada do gerador de plano de estudos PMBA.
 
