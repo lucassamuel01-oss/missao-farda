@@ -198,6 +198,11 @@ a{
     inset 0 0 18px rgba(217,168,78,.05);
 }
 
+img.crest{
+  object-fit:cover;
+  background:#050706;
+}
+
 .brand strong{
   display:block;
 

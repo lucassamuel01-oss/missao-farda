@@ -1434,7 +1434,7 @@ function renderTopbar(activePage = "") {
   return `
   <header class="topbar">
     <a class="brand" href="/">
-      <span class="crest">MF</span>
+      <img class="crest" src="/assets/logo-icon-missao-farda.jpg" alt="Missão Farda" />
       <span><strong>MISSÃO FARDA</strong><small>CRIS ANDRADE</small></span>
     </a>
     <nav id="mainNav">
@@ -1453,7 +1453,7 @@ function renderTopbar(activePage = "") {
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
   <nav class="mobile-nav" id="mobileNav" aria-hidden="true">
     <div class="mobile-nav-header">
-      <span class="crest" style="width:38px;height:38px;font-size:14px;">MF</span>
+      <img class="crest" src="/assets/logo-icon-missao-farda.jpg" alt="Missão Farda" style="width:38px;height:38px;" />
       <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
     </div>
     <a href="/#plano">Gerar plano</a>
@@ -1497,6 +1497,7 @@ function renderCursoPage() {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Preparatório PMBA — Manual do Mike · Missão Farda</title>
+  <link rel="icon" type="image/jpeg" href="/assets/logo-icon-missao-farda.jpg" />
   <link rel="stylesheet" href="/styles.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1975,6 +1976,7 @@ function renderPlanoPage(dados, plano) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plano gerado — Missão Farda</title>
+  <link rel="icon" type="image/jpeg" href="/assets/logo-icon-missao-farda.jpg" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="result-page">
@@ -2158,7 +2160,8 @@ app.post("/gerar-plano", (req, res) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Erro no envio</title>
-        <link rel="stylesheet" href="/styles.css" />
+        <link rel="icon" type="image/jpeg" href="/assets/logo-icon-missao-farda.jpg" />
+  <link rel="stylesheet" href="/styles.css" />
       </head>
       <body style="padding:24px;">
         <main class="glass" style="max-width:800px;margin:0 auto;padding:24px;border-radius:24px;">
@@ -2198,7 +2201,8 @@ app.post("/gerar-plano", (req, res) => {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Erro interno</title>
-        <link rel="stylesheet" href="/styles.css" />
+        <link rel="icon" type="image/jpeg" href="/assets/logo-icon-missao-farda.jpg" />
+  <link rel="stylesheet" href="/styles.css" />
       </head>
       <body style="padding:24px;">
         <main class="glass" style="max-width:800px;margin:0 auto;padding:24px;border-radius:24px;">
