@@ -20,6 +20,13 @@ const materiasPorConcurso = {
     "Matemática/RLM",
     "Informática",
     "Língua Inglesa"
+  ],
+  "SD PMMG": [
+    "Língua Portuguesa",
+    "Literatura",
+    "Língua Inglesa",
+    "Noções de Direito e Direitos Humanos",
+    "Raciocínio Lógico-Matemático"
   ]
 };
 
