@@ -282,6 +282,7 @@
     .pdf-card.cat-questoes::before   { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
     .pdf-card.cat-redacao::before    { background: linear-gradient(90deg, #34d399, #059669); }
     .pdf-card.cat-taf::before        { background: linear-gradient(90deg, #f87171, #dc2626); }
+    .pdf-card.cat-simulado::before   { background: linear-gradient(90deg, #38bdf8, #0284c7); }
 
     .pdf-card:hover {
       border-color: var(--line-strong);
@@ -306,6 +307,7 @@
     .pdf-card.cat-questoes   .pdf-tag { background: rgba(167,139,250,.18); color: #c4b5fd; border: 1px solid rgba(167,139,250,.35); }
     .pdf-card.cat-redacao    .pdf-tag { background: rgba(52,211,153,.18); color: #6ee7b7; border: 1px solid rgba(52,211,153,.35); }
     .pdf-card.cat-taf        .pdf-tag { background: rgba(248,113,113,.18); color: #fca5a5; border: 1px solid rgba(248,113,113,.35); }
+    .pdf-card.cat-simulado   .pdf-tag { background: rgba(56,189,248,.18); color: #7dd3fc; border: 1px solid rgba(56,189,248,.35); }
 
     .pdf-card h3 {
       font-family: Georgia, serif;
@@ -518,10 +520,32 @@
     <!-- PDF Materials -->
     <div class="section-header">
       <h2>Materiais Premium</h2>
-      <span>4 guias exclusivos</span>
+      <span>5 materiais exclusivos</span>
     </div>
 
     <div class="pdf-grid">
+
+      <!-- 0. Simulado Premium -->
+      <div class="pdf-card cat-simulado">
+        <div class="pdf-tag">◎ Simulado</div>
+        <h3>Simulado Premium PMBA — FCC</h3>
+        <p>80 questões autorais no padrão real da Fundação Carlos Chagas, com gabarito comentado e diagnóstico de desempenho por disciplina.</p>
+        <ul class="pdf-highlights">
+          <li>80 questões inéditas no nível e estilo da FCC</li>
+          <li>Mapa da prova com a distribuição das 12 disciplinas</li>
+          <li>Gabarito comentado: regra, raciocínio e padrão de cobrança</li>
+          <li>Folha de respostas, escala de desempenho e caderno de erros</li>
+        </ul>
+        <div class="pdf-actions">
+          <a class="pdf-btn-primary" href="/assets/pdfs/simulado-premium-pmba-fcc-missao-farda.pdf" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir PDF
+          </a>
+          <a class="pdf-btn-ghost" href="/assets/pdfs/simulado-premium-pmba-fcc-missao-farda.pdf" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
 
       <!-- 1. Código da Aprovação -->
       <div class="pdf-card cat-estrategia">
